@@ -24,3 +24,5 @@ paper/*.synctex.gz
 Thumbs.db
 .vscode/
 .idea/
+uv.lock
+audit_reports/

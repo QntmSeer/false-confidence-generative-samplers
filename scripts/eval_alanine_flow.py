@@ -8,8 +8,8 @@ Demonstrates the unvisited support pathology (Proposition 1) on a continuous mol
 4. Apply the bidirectional reverse check (G_rev vs G_fwd) to expose the dropped C7ax basin.
 
 Outputs:
-- chemistry_elevation/simulations/alanine_flow_audit.json
-- chemistry_elevation/paper/figures/fig_alanine_flow_pathology.pdf|png
+- data/alanine_flow_audit.json
+- paper/figures/fig_alanine_flow_pathology.pdf|png
 """
 
 import json
@@ -150,7 +150,7 @@ n_accepted = 0
 while n_accepted < 5000:
     prop = (torch.rand(20000, 2) * 2 - 1) * np.pi
     u_p = U_alanine(prop)
-    prob = torch.exp(-BETA * (u_p - u_min_global))
+    prob = torch.clamp(torch.exp(-BETA * (u_p - u_min_global)), max=1.0)
     accept = torch.rand(20000) < prob
     accepted = prop[accept]
     ref_samples.append(accepted)
@@ -238,9 +238,10 @@ out_summary = {
     }
 }
 
-sim_dir = os.path.abspath('chemistry_elevation/simulations')
-os.makedirs(sim_dir, exist_ok=True)
-out_path = os.path.join(sim_dir, 'alanine_flow_audit.json')
+ROOT = Path(__file__).resolve().parents[1]
+data_dir = ROOT / "data"
+data_dir.mkdir(parents=True, exist_ok=True)
+out_path = data_dir / "alanine_flow_audit.json"
 with open(out_path, 'w') as f:
     json.dump(out_summary, f, indent=2)
 

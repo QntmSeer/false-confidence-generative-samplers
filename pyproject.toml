@@ -7,7 +7,7 @@ name = "false-confidence"
 version = "0.1.0"
 description = "Diagnostic benchmarks and bidirectional audits exposing mode collapse in generative physical samplers."
 readme = "README.md"
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
 authors = [{ name = "Karthik Gangadharaiah" }]
 requires-python = ">=3.10"
 dependencies = [
@@ -16,6 +16,11 @@ dependencies = [
     "scipy>=1.10",
     "matplotlib>=3.7",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scripts*"]
+exclude = ["data*", "paper*", "audit_reports*"]
 
 [tool.ruff]
 line-length = 100
