@@ -1,0 +1,26 @@
+We evaluate the main test split of the SpinGlassBench benchmark at $n=24$: Gaussian SK instances, seven inverse temperatures $\beta\in\{0.3,0.6,0.9,1,1.2,1.5,2\}$, an equal budget of $10^5$ energy evaluations per estimate across all methods, exact $\log Z$ computed by GPU enumeration, and 5 seeds per instance. Classical estimators were evaluated across $\vinstClassical$ instances ($1{,}000$ runs total); computationally intensive learned methods were trained and evaluated across $\vinstLearnedMin$ to $\vinstLearnedMax$ instances ($100$ to $150$ runs total). Table~\ref{tab:chemical_audit} and Figure~\ref{fig:audit_comparison} report summary metrics from this benchmark.
+
+\begin{table}[t]
+\centering\small
+\caption{SK, $n=24$, test split, $10^5$ energy evaluations per estimate, 5 seeds per instance. Error: mean $|\log\hat Z-\log Z|/n$. Coverage: share of nominal 95\% intervals containing exact $\log Z$ (Clopper-Pearson 95\% binomial CIs in text); n/a: method reports no interval. Seconds: mean wall-clock per estimate at $\beta=1.5$, one thread; learned methods include training.}
+\label{tab:chemical_audit}
+\input{tables/tab_chemical_audit}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_audit_comparison.pdf}
+\caption{Left: mean absolute error of $\log Z$ per spin against $\beta$. Right: coverage of nominal 95\% intervals. SK $n=24$, test split, 5 seeds per instance; error bars are 95\% intervals over instances. Dashed: nominal 95\%.}
+\label{fig:audit_comparison}
+\end{figure}
+
+\paragraph{Accuracy and architectural divergence.} At $\beta=1.5$, error per spin is $\verrSATIOneFive$ for simulated annealing with thermodynamic integration (SA-TI) and $\verrPAOneFive$ for population annealing (PA). Crucially, learned samplers show sharp architectural divergence:
+\begin{itemize}
+\item \textbf{Normalized autoregressive networks (VAN-MADE):} Achieve the highest accuracy per energy evaluation ($\verrVANOneFive$, roughly $\vvanOverSati$ times lower error than SA-TI) and maintain calibrated coverage across all temperatures: $\vcovVANZeroSix\%$ at $\beta=0.6$ (95\% Clopper-Pearson CI: $[88.7\%, 98.4\%]$), $\vcovVANOneFive\%$ at $\beta=1.5$ ($[90.1\%, 98.9\%]$), and $\vcovVANTwo\%$ at $\beta=2$ ($[84.8\%, 96.5\%]$), matching classical PA ($\vcovPATwo\%$, $[93.5\%, 96.2\%]$). Because autoregressive models evaluate exact normalized probabilities at each site, their reverse-KL gradients directly penalize mass truncation. However, this relies on a 1D sequence factorization ($p(\sigma)=\prod_i p(\sigma_i\mid\sigma_{<i})$). In continuous 3D molecular coordinates, autoregressive factorizations over all atom positions are geometrically constrained and break Euclidean equivariance, making unconstrained diffusion and continuous flows the predominant architectures in chemistry.
+\item \textbf{Iterative generative samplers (Masked Diffusion and GFlowNets):} Are one to two orders of magnitude less accurate ($\verrDiffOneFive$ and $\verrGFNOneFive$) and undergo catastrophic calibration collapse in the spin-glass phase ($\beta \ge 1.5$). Masked diffusion coverage falls from $\vcovDiffZeroSix\%$ ($[87.4\%, 97.8\%]$) at $\beta=0.6$ to $\vcovDiffOneFive\%$ ($[49.7\%, 69.7\%]$) at $\beta=1.5$ and $\vcovDiffTwo\%$ ($[3.5\%, 15.2\%]$) at $\beta=2$. GFlowNet coverage drops steadily to $\vcovGFNOneFive\%$ ($[63.3\%, 78.4\%]$) and $\vcovGFNTwo\%$ ($[38.5\%, 55.0\%]$).
+\end{itemize}
+Sampled overlaps reveal the mechanism: diffusion and GFlowNets concentrate on isolated clusters of the overlap distribution, omitting spin-reversed sectors. By Proposition~\ref{prop:unvisited}, this omitted mass does not widen nominal intervals, producing false confidence.
+
+\paragraph{Wall-clock trade-offs.} Table~\ref{tab:chemical_audit} reports single-thread CPU execution time, with learned methods including training. Under this metric, SA-TI finishes in $\vsecSATI$\,s and PA in $\vsecPA$\,s, whereas VAN-MADE requires $\vsecVAN$\,s and diffusion requires $\vsecDiff$\,s. While neural samplers can amortize training costs when millions of samples are required, on single-target free-energy evaluations classical annealing remains substantially faster.
+
+\paragraph{External code audits.} Using exact ground-truth references, we audited released checkpoints and integration grids of published neural samplers using dedicated standalone scripts (\texttt{eval\_mdns.py} and \texttt{eval\_leaps.py}). In MDNS \citep{zhu2025mdns}, a bfloat16 rounding error in the released checkpoint induces an upward bias of $+4.6\times10^{-4}$ per site, which can be corrected in a single line; MetaDNS \citep{du2026metadns} uses float16 and is unbiased. In LEAPS \citep{holderrieth2025leaps}, coarse time discretization causes a downward bias of $2.2$ to $3.2\times10^{-3}$ per site. In both cases, the reported ESS was high ($>80\%$), completely concealing the bias until exact enumeration exposed it.

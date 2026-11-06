@@ -1,0 +1,23 @@
+{
+  "system": "Alanine Dipeptide (2D Ramachandran PMF)",
+  "temperature_k": 300.0,
+  "kbt_kcal_mol": 0.5961612,
+  "exact_Z": 295.87420654296875,
+  "exact_F_kcal_mol": -3.3921181115386307,
+  "c7ax_equilibrium_mass_pct": 8.107867950407655,
+  "theoretical_bias_kcal_mol": 0.050408275861827265,
+  "trained_model": "RealNVP Normalizing Flow (4 coupling layers)",
+  "training_objective": "Reverse KL Divergence (Zero-Forcing)",
+  "audit": {
+    "n_runs": 100,
+    "m_samples_per_run": 5000,
+    "c7ax_sampled_pct": 0.0,
+    "median_ess_pct": 79.2349609375,
+    "mean_f_hat_kcal_mol": -3.270436813680084,
+    "mean_error_f_kcal_mol": 0.12168129785854681,
+    "mean_nominal_ci_kcal_mol": 0.04774915261600767,
+    "empirical_95ci_coverage_pct": 10.0,
+    "median_forward_jensen_gap_nats": 0.028214216232299805,
+    "median_reverse_jensen_gap_nats": 11.661338329315186
+  }
+}

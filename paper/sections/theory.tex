@@ -1,0 +1,35 @@
+Let $\Omega$ be the configuration space, discrete or continuous, $U$ the potential energy and $p(x)=e^{-\beta U(x)}/Z$ the Boltzmann law, with free energy $F=-\beta^{-1}\log Z$. A learned proposal $q_\theta$ is trained to approximate $p$, for example by minimizing $\mathrm{KL}(q_\theta\,\|\,p)$ \citep{noe2019boltzmann}. Given draws $x_1,\dots,x_M\sim q_\theta$, the importance-sampling estimate is
+\begin{equation}
+w_k=\frac{e^{-\beta U(x_k)}}{q_\theta(x_k)},\qquad \hat Z_M=\frac1M\sum_{k=1}^M w_k,\qquad \hat F_M=-\beta^{-1}\log\hat Z_M,
+\end{equation}
+its reliability is judged by the self-normalized effective sample size
+\begin{equation}
+\ESS_M=\frac{\left(\sum_k w_k\right)^2}{\sum_k w_k^2},
+\end{equation}
+and a nominal 95\% interval is $\hat F_M\pm1.96\,\beta^{-1}\hat\sigma_w/(\sqrt M\,\hat Z_M)$, where $\hat\sigma_w$ is the sample standard deviation of the weights.
+
+\begin{proposition}[Diagnostic blindness under unvisited support]
+\label{prop:unvisited}
+Let $\Omega=A\cup B$ with $A\cap B=\emptyset$, $p(B)=\alpha>0$ and $q_\theta(B)=\epsilon$. Let $\mathcal E$ be the event that no draw lands in $B$. Then
+\begin{enumerate}
+\item $\mathbb P(\mathcal E)=(1-\epsilon)^M$, which tends to 1 as $\epsilon\to0$ for fixed $M$;
+\item conditioned on $\mathcal E$, the draws are i.i.d.\ from $q_A=q_\theta(\cdot)/(1-\epsilon)$ restricted to $A$;
+\item conditioned on $\mathcal E$, $\E[\hat Z_M\mid\mathcal E]=(1-\alpha)Z/(1-\epsilon)$, so the estimate asymptotically targets $F-\beta^{-1}\log\frac{1-\alpha}{1-\epsilon}$, which approaches $F-\beta^{-1}\log(1-\alpha)$ for small $\epsilon$;
+\item conditioned on $\mathcal E$, the joint law of the normalized weights $w_k/\sum_jw_j$, and hence of $\ESS_M$ and of the relative interval width $\hat\sigma_w/\hat Z_M$, does not depend on $\alpha$, provided $U$ on $A$ is held fixed.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The draws are independent, so $\mathbb P(\mathcal E)=\prod_k\mathbb P(x_k\in A)=(1-\epsilon)^M$, and conditioned on $\mathcal E$ each draw has law $q_\theta(\cdot\mid A)=q_A$, independently. For $x\in A$,
+\begin{equation}
+\E_{q_A}[w]=\int_A\frac{e^{-\beta U(x)}}{q_\theta(x)}\,\frac{q_\theta(x)}{1-\epsilon}\,dx=\frac{Z_A}{1-\epsilon},\qquad Z_A=\int_Ae^{-\beta U(x)}dx=(1-\alpha)Z,
+\end{equation}
+which gives item 3. For item 4, write $e^{-\beta U(x)}=Z_A\,p(x\mid A)$ on $A$. Then $w_k=c\,p(x_k\mid A)/q_A(x_k)$ with $c=Z_A/(1-\epsilon)$ a constant. The normalized weights do not depend on $c$, and $p(\cdot\mid A)$ and $q_A$ do not depend on what happens in $B$. Changing $\alpha$ while keeping $U$ on $A$ fixed only changes $c$.
+\end{proof}
+
+\paragraph{Diagnostic consequence: coverage collapse.}
+The practical danger is not merely that importance sampling requires support coverage: it is the structural blindness of self-reported metrics. By item 4, if a model places negligible mass $\epsilon \ll 1/M$ on a basin, the event $\mathcal E$ occurs with high probability ($>99.9\%$ for $\epsilon=10^{-6}$, $M=10^3$). Conditioned on $\mathcal E$, the sample variance $\hat\sigma_w^2$ and tail diagnostics such as Pareto $\hat{k}$ \citep{vehtari2024psis} reflect only the fit within $A$. In any regime where $\epsilon \ll 1/M$ as sample size $M$ grows, the nominal delta-method confidence interval contracts at rate $O(M^{-1/2})$ around the biased target $F-\beta^{-1}\log(1-\alpha)$, while $\ESS_M/M$ can approach 100\% and $\hat{k}$ remains falsely reassuring ($<0.5$). Consequently, the empirical coverage of the nominal 95\% interval collapses asymptotically to 0\%.
+
+In continuous state spaces, $A$ and $B$ are Borel measurable sets, and $q_A(x) = q_\theta(x)/\int_A q_\theta$ is well-defined whenever $q_\theta(x) > 0$ on $A$. While continuous neural proposals typically have non-zero support everywhere due to diffuse Gaussian tails, this pathology remains operant whenever a physical basin is separated by high free-energy barriers or entropic bottlenecks. If the proposal assigns probability $\epsilon \ll 1/M$ to that basin, no finite sample will visit it, leaving the empirical weights truncated and the diagnostics blind.
+
+The right panel of Figure~\ref{fig:molecular_pathology} illustrates the scale of this bias: at 300\,K a dropped basin must hold about $\vtrpNative\%$ of the mass (as Trp-cage does in our trajectory) to shift $F$ by $\vtrpBias$\,kcal/mol, exceeding common chemical accuracy targets, while a basin holding $\vchigNative\%$ (chignolin in our trajectory) shifts $F$ by only $\vchigBias$\,kcal/mol. Related failure modes for mode-collapsed discrete samplers were observed by \citet{xu2026modecollapse}.

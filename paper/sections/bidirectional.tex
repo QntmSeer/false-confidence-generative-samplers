@@ -1,0 +1,37 @@
+No statistic computed from draws of $q_\theta$ alone can detect an unvisited basin (Proposition~\ref{prop:unvisited}). Breaking this blindness requires configurations that $q_\theta$ did not propose. Suppose an independent reference sampler, such as parallel tempering or annealed importance sampling, provides $y_1,\dots,y_K$ approximately distributed according to $p$. Writing $\ell(x)=-\beta U(x)-\log q_\theta(x)$ for the unnormalized log importance weight, two diagnostic gaps arise from Jensen's inequality:
+\begin{equation}
+G_{\rm fwd}=\log\hat Z_M-\frac1M\sum_{k=1}^M\ell(x_k),\qquad
+G_{\rm rev}=\frac1K\sum_{j=1}^K\ell(y_j)-\log\hat Z_M.
+\end{equation}
+By Jensen's inequality applied to the concave logarithm, $\log(\frac1M\sum_k e^{\ell(x_k)})\ge\frac1M\sum_k\ell(x_k)$, so $G_{\rm fwd}\ge0$ always. When $q_\theta$ covers the support of $p$, $G_{\rm fwd}$ serves as an empirical estimator of $\mathrm{KL}(q_\theta\,\|\,p)$. However, when a basin is omitted, $G_{\rm fwd}$ reflects only the fit within the visited region $A$, approaching $\mathrm{KL}(q_A\,\|\,p_A)\approx0$ if $q_\theta$ fits $A$ well.
+
+Conversely, because $\E_p[\ell]=\log Z+\mathrm{KL}(p\,\|\,q_\theta)$, the reverse gap estimates
+\begin{equation}
+G_{\rm rev}\approx\mathrm{KL}(p\,\|\,q_\theta)+(\log Z-\log\hat Z_M).
+\end{equation}
+Both terms expand dramatically when a basin of mass $\alpha$ is dropped: by data processing, $\mathrm{KL}(p\,\|\,q_\theta)\ge\alpha\log(\alpha/\epsilon)+(1-\alpha)\log\frac{1-\alpha}{1-\epsilon}$ with $\epsilon=q_\theta(B)\to0$, and $\log Z-\log\hat Z_M\approx-\log(1-\alpha)$. The forward gap sees neither. For a dropped basin of mass $\alpha=0.081$ ($\epsilon \approx 10^{-6}$ in alanine dipeptide), this omission penalty contributes $\approx 0.9$\,nats, while density mismatch elevates $G_{\rm rev}$ to $11.6$\,nats ($G_{\rm rev} > 2$\,nats signals severe distortion; $G_{\rm rev} > 5$\,nats exposes mode omission). This mirrors Bennett's acceptance ratio \citep{bennett1976bar} adapted for mode coverage.
+
+\paragraph{Operational role: auditing amortized models.}
+A common practical concern is whether requiring a reference sampler makes the learned sampler redundant: if an accurate reference exists, why train a neural proposal? The answer lies in amortization. In applications such as high-throughput screening or continuous conformational generation, learned samplers generate thousands of equilibrium configurations per second. Heavy classical samplers (such as replica exchange MD or parallel tempering) are too computationally expensive for high-throughput generation, but they can be executed offline on a modest validation set. By evaluating the reverse gap $G_{\rm rev}$ on these benchmark targets, practitioners can rigorously verify that the amortized network has not dropped macroscopic basins. Furthermore, the reference sampler does not need to be mathematically exact: as long as its support overlaps the basin missed by $q_\theta$, the reverse gap will signal the omission. Standard multi-chain diagnostics (such as Gelman-Rubin $\hat{R} < 1.05$ or replica-exchange round-trip rates) can be used to ensure the offline reference set has visited the relevant basins before auditing $q_\theta$.
+
+\paragraph{Exact toy validation.} The double well of Figure~\ref{fig:molecular_pathology} has
+\begin{equation}
+U(x)=-2.5\,e^{-(x+1.1)^2/(2\cdot0.18^2)}-1.2\,e^{-(x-1.1)^2/(2\cdot0.65^2)}+0.15\,x^2,\qquad\beta=1.2.
+\end{equation}
+By numerical quadrature, the two basins (divided at the barrier peak, $x=\vtoySplit$) have Boltzmann weights $\vtoyZone$ and $\vtoyZtwo$. The wider basin holds $\alpha=\vtoyMassTwo\%$ of the equilibrium mass despite having a higher local energy minimum, due to entropic width. The proposal mixes tempered densities of the two basins, placing mass $1-\epsilon$ on the narrow well and $\epsilon$ on the wide well. We draw $M=\vbdM$ proposals and $K=\vbdM$ exact reference draws in each of $\vbdRuns$ independent runs per value of $\epsilon$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_bidirectional_solution.pdf}
+\caption{Exact toy, $M=K=\vbdM$, $\vbdRuns$ runs per value of $\epsilon$. Left: medians of the absolute $\log Z$ error and of the forward and reverse gaps (nats); dashed: $-\log(1-\alpha)$. Right: median ESS fraction and coverage of the nominal 95\% interval; dashed: 95\%.}
+\label{fig:bidirectional_solution}
+\end{figure}
+
+For $\epsilon\le10^{-4}$, almost no run proposes the wide basin (at $\epsilon=\vbdEps$, $\vbdNoDisc\%$ of runs). In these runs, the median ESS is $\vbdESS\%$ and the forward Jensen gap is nearly zero ($\vbdJensen$ nats), falsely signaling excellent convergence. Meanwhile, the true $\log Z$ error is $\vbdErr$ nats (matching the theoretical shift $-\log(1-\alpha)=\vbdTarget$), and nominal 95\% intervals cover the true free energy in $\vbdCov\%$ of runs (Figure~\ref{fig:bidirectional_solution}). In sharp contrast, the reverse gap detects the omission immediately, reporting $\vbdBidir$ nats.
+
+\paragraph{Audit of a continuous Boltzmann generator (Alanine Dipeptide).}
+To evaluate Proposition~\ref{prop:unvisited} and the reverse check on a continuous molecular model, we trained a 4-layer RealNVP normalizing flow \citep{noe2019boltzmann} via reverse-KL divergence on the 2D Ramachandran landscape $(\phi, \psi)$ of alanine dipeptide at 300\,K ($1.0/k_BT$). By fine 2D quadrature ($300\times300$ grid), the metastable $C_{7\rm ax}$ basin ($\phi > 0$) accounts for $\valaAlpha\%$ of the equilibrium Boltzmann mass ($F_{\rm exact} = \valaFexact$\,kcal/mol). 
+
+Under reverse-KL training, the flow collapses into the deeper $C_{7\rm eq}$ basin and proposes $\valaSamp\%$ of draws in $C_{7\rm ax}$. Despite completely omitting this state, across 100 independent evaluation runs ($M=5{,}000$ draws each), the flow reports a median internal ESS of $\valaESS\%$ and nominal 95\% confidence intervals covering the exact free energy in only $\valaCov\%$ of runs ($\pm\valaCI$\,kcal/mol interval width around a $+\valaErr$\,kcal/mol biased estimate). 
+
+The forward Jensen gap reports $G_{\rm fwd} = \valaGfwd$\,nats, blind to the missing fold. However, the reverse check evaluated on independent reference draws immediately spikes to $G_{\rm rev} = \valaGrev$\,nats. Decomposing $G_{\rm rev}$ reveals that reference draws landing in $C_{7\rm ax}$ account for $10.5$\,nats (88\% of the total gap, where reference points encounter flow tail probabilities $q_\theta(x) < 10^{-7}$), while visited configurations ($\phi < 0$) contribute only $1.4$\,nats. Because $G_{\rm rev}$ scales with the negative log probability of reference points under the model, it provides an extraordinarily sensitive alarm for dropped conformational states.

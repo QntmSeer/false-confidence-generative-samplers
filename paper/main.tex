@@ -1,0 +1,80 @@
+\documentclass[10pt]{article}
+% TMLR style (github.com/JmlrOrg/tmlr-style-file, commit 7bf90ef, Apache-2.0).
+% Submission: anonymous. Preprint: [preprint]. Camera-ready: [accepted].
+\usepackage[preprint]{tmlr}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\captionsetup{font=small}
+\newtheorem{proposition}{Proposition}
+
+% Every number below that comes from data is a macro written by
+% chemistry_elevation/scripts/make_figures.py from stored artifacts.
+\input{generated/values}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\ESS}{\mathrm{ESS}}
+\title{False Confidence in Generative Samplers:\\Exact Physical References Expose Hidden Errors and Diagnostic Blindness}
+% Hidden by tmlr.sty in submission mode; printed with [preprint] or [accepted].
+\author{\name Karthik Gangadharaiah \\
+      \addr Independent researcher (KoWerk), Amsterdam, The Netherlands \\
+      ORCID: \href{https://orcid.org/0009-0009-1713-8624}{0009-0009-1713-8624}}
+\def\month{MM}
+\def\year{YYYY}
+\def\openreview{\url{https://openreview.net/forum?id=XXXX}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+\input{sections/intro}
+
+\section{Related work}
+\label{sec:related}
+\input{sections/related}
+
+\section{Unvisited support}
+\label{sec:theory}
+\input{sections/theory}
+
+\section{Why spin glasses are a fair test}
+\label{sec:isomorphism}
+\input{sections/isomorphism}
+
+\section{Exact audit on spin glasses}
+\label{sec:benchmarks}
+\input{sections/benchmarks}
+
+\section{A reverse check}
+\label{sec:bidirectional}
+\input{sections/bidirectional}
+
+\section{Molecular simulations}
+\label{sec:molecular_case}
+\input{sections/molecular_case}
+
+\section{Limitations}
+\label{sec:limitations}
+\input{sections/limitations}
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{sections/conclusion}
+
+\section*{Reproducibility}
+\label{sec:repro}
+\input{sections/repro}
+
+\bibliographystyle{tmlr}
+\bibliography{refs}
+
+\end{document}

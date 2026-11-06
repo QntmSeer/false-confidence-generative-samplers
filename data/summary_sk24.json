@@ -1,0 +1,1796 @@
+{
+  "t1": [
+    {
+      "method": "ais",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0001239173007226802,
+      "ci": [
+        0.00011830368165553823,
+        0.00012986443609908245
+      ],
+      "bias_per_spin": -8.37864322071169e-06,
+      "bias_ci": [
+        -1.8085325342343937e-05,
+        1.3186038497250675e-06
+      ],
+      "rmse_per_spin": 7.10338486388204e-05,
+      "median_abs_err_over_sd": 0.025525829058244666,
+      "mean_seconds": 0.08018394024101509,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.955,
+      "coverage_ci": [
+        0.9403171620637766,
+        0.9662004877143683
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "ais",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0002650616268304868,
+      "ci": [
+        0.0002520946430783169,
+        0.000278221846464131
+      ],
+      "bias_per_spin": -2.048997191770977e-05,
+      "bias_ci": [
+        -4.12717897392162e-05,
+        7.79743909086964e-07
+      ],
+      "rmse_per_spin": 0.00015190787873518773,
+      "median_abs_err_over_sd": 0.01208623098345011,
+      "mean_seconds": 0.07823906233202615,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.956,
+      "coverage_ci": [
+        0.9414482108495923,
+        0.9670617854115815
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "ais",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00045619504041337263,
+      "ci": [
+        0.0004346907314111603,
+        0.0004775181895526655
+      ],
+      "bias_per_spin": -2.0881819900400613e-05,
+      "bias_ci": [
+        -6.0113545502359726e-05,
+        1.834936088145186e-05
+      ],
+      "rmse_per_spin": 0.0002813961272431552,
+      "median_abs_err_over_sd": 0.008615305988606612,
+      "mean_seconds": 0.0740841748439907,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.949,
+      "coverage_ci": [
+        0.9335645136552383,
+        0.9609990572247332
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "ais",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0005006891290518042,
+      "ci": [
+        0.00047476742082653477,
+        0.0005271365147831031
+      ],
+      "bias_per_spin": -2.3112515248455814e-05,
+      "bias_ci": [
+        -6.189779188928454e-05,
+        1.5452962977910527e-05
+      ],
+      "rmse_per_spin": 0.00027376839727632514,
+      "median_abs_err_over_sd": 0.006260647360442892,
+      "mean_seconds": 0.07347815965799054,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.953,
+      "coverage_ci": [
+        0.9380600619184716,
+        0.9644728948936154
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "ais",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0006658395239755944,
+      "ci": [
+        0.0006308604824831335,
+        0.0007022329654103191
+      ],
+      "bias_per_spin": 1.2241015545670146e-05,
+      "bias_ci": [
+        -3.737609929359689e-05,
+        6.314976803724763e-05
+      ],
+      "rmse_per_spin": 0.0003627234349748047,
+      "median_abs_err_over_sd": 0.006984988557360633,
+      "mean_seconds": 0.07110141766800553,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.955,
+      "coverage_ci": [
+        0.9403171620637766,
+        0.9662004877143683
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "ais",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0008937946460840756,
+      "ci": [
+        0.0008445908719664955,
+        0.0009452830206227726
+      ],
+      "bias_per_spin": 2.2618949350753682e-07,
+      "bias_ci": [
+        -6.53459909497898e-05,
+        6.721751829442801e-05
+      ],
+      "rmse_per_spin": 0.00047735439427428714,
+      "median_abs_err_over_sd": 0.005376931400688614,
+      "mean_seconds": 0.06849240126993754,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.945,
+      "coverage_ci": [
+        0.9290916123226243,
+        0.9575025726252315
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "ais",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0012309657086501157,
+      "ci": [
+        0.001160290137362021,
+        0.0013056583032613552
+      ],
+      "bias_per_spin": -6.417558471881807e-05,
+      "bias_ci": [
+        -0.00015481187621416978,
+        2.2684711469400424e-05
+      ],
+      "rmse_per_spin": 0.0006349136543321452,
+      "median_abs_err_over_sd": 0.004779743503079211,
+      "mean_seconds": 0.06401237742699413,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.949,
+      "coverage_ci": [
+        0.9335645136552383,
+        0.9609990572247332
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "diffusion",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 7.34331038813559e-05,
+      "ci": [
+        6.417211109179136e-05,
+        8.295188669916193e-05
+      ],
+      "bias_per_spin": 5.197841733673376e-06,
+      "bias_ci": [
+        -7.286677587378208e-06,
+        1.891124663765585e-05
+      ],
+      "rmse_per_spin": 3.716754626926321e-05,
+      "median_abs_err_over_sd": 0.007899766445409054,
+      "mean_seconds": 6.941157847713255,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.9533333333333334,
+      "coverage_ci": [
+        0.9068135276008725,
+        0.9772134508387381
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "diffusion",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00015840431989133506,
+      "ci": [
+        0.0001349503145720668,
+        0.00018305250999841482
+      ],
+      "bias_per_spin": 2.3402975533853226e-05,
+      "bias_ci": [
+        -1.1561865129501208e-05,
+        5.845362970101136e-05
+      ],
+      "rmse_per_spin": 0.00010215232003110964,
+      "median_abs_err_over_sd": 0.008027070211038554,
+      "mean_seconds": 6.951374878333189,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.94,
+      "coverage_ci": [
+        0.8899102291652979,
+        0.9681159557907947
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "diffusion",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00031798084480739064,
+      "ci": [
+        0.00028092861920307017,
+        0.0003567858606493184
+      ],
+      "bias_per_spin": 5.379424568657932e-05,
+      "bias_ci": [
+        -3.2576323146322703e-06,
+        0.00011688349962442038
+      ],
+      "rmse_per_spin": 0.00017326783100806705,
+      "median_abs_err_over_sd": 0.005015977702363601,
+      "mean_seconds": 6.94571772312002,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.94,
+      "coverage_ci": [
+        0.8899102291652979,
+        0.9681159557907947
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "diffusion",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00034557320250255455,
+      "ci": [
+        0.00030139274782185673,
+        0.0003943201164785346
+      ],
+      "bias_per_spin": 3.736472385036924e-05,
+      "bias_ci": [
+        -2.8399384720464877e-05,
+        9.987585919424876e-05
+      ],
+      "rmse_per_spin": 0.00018367501218265333,
+      "median_abs_err_over_sd": 0.006317448382867263,
+      "mean_seconds": 6.941883291273478,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.94,
+      "coverage_ci": [
+        0.8899102291652979,
+        0.9681159557907947
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "diffusion",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0008891226369080397,
+      "ci": [
+        0.00046422027701027593,
+        0.001574653036122191
+      ],
+      "bias_per_spin": -0.0003794437020117838,
+      "bias_ci": [
+        -0.0011125658358670835,
+        8.259832070956432e-05
+      ],
+      "rmse_per_spin": 0.001848951273626537,
+      "median_abs_err_over_sd": 0.005607989636247236,
+      "mean_seconds": 6.957869339700164,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.9133333333333333,
+      "coverage_ci": [
+        0.8573717762637809,
+        0.9486528217252759
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "diffusion",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.012866104870886012,
+      "ci": [
+        0.008593591621210133,
+        0.017533437298922757
+      ],
+      "bias_per_spin": -0.00679652492388716,
+      "bias_ci": [
+        -0.011127177132777773,
+        -0.0027231566824793105
+      ],
+      "rmse_per_spin": 0.013585144462843887,
+      "median_abs_err_over_sd": 0.08002432392969425,
+      "mean_seconds": 6.956664504986578,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.6,
+      "coverage_ci": [
+        0.52004915848891,
+        0.6749567926374747
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "diffusion",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.02942350977052242,
+      "ci": [
+        0.027700953633451268,
+        0.03121329561576668
+      ],
+      "bias_per_spin": -0.027340315739302314,
+      "bias_ci": [
+        -0.02975941848256867,
+        -0.02436142477707104
+      ],
+      "rmse_per_spin": 0.028362008002300373,
+      "median_abs_err_over_sd": 0.3272342026398431,
+      "mean_seconds": 6.957077596386687,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.08,
+      "coverage_ci": [
+        0.04635364151865291,
+        0.13462136375053146
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "gflownet",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 20,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0003682563937555417,
+      "ci": [
+        0.00033055219892569944,
+        0.0004084871981642167
+      ],
+      "bias_per_spin": 2.9737028950121607e-05,
+      "bias_ci": [
+        -5.7558301663561135e-05,
+        0.0001118765473863266
+      ],
+      "rmse_per_spin": 0.00019545926697675387,
+      "median_abs_err_over_sd": 0.07066325604163898,
+      "mean_seconds": 31.197763500568403,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.92,
+      "coverage_ci": [
+        0.8500189229905127,
+        0.9589065385156194
+      ],
+      "coverage_trials": 100
+    },
+    {
+      "method": "gflownet",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 20,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0015433071092365758,
+      "ci": [
+        0.0012400069613471515,
+        0.0018879114867306525
+      ],
+      "bias_per_spin": 0.00015645880791133194,
+      "bias_ci": [
+        -0.00018896958191207878,
+        0.000511285084895447
+      ],
+      "rmse_per_spin": 0.000802388970631822,
+      "median_abs_err_over_sd": 0.05552190748367814,
+      "mean_seconds": 31.32877726257924,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.94,
+      "coverage_ci": [
+        0.8752318455410406,
+        0.9722138760368118
+      ],
+      "coverage_trials": 100
+    },
+    {
+      "method": "gflownet",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 20,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.005764518693262244,
+      "ci": [
+        0.004632753348375318,
+        0.007018042115323247
+      ],
+      "bias_per_spin": -5.939609616515784e-05,
+      "bias_ci": [
+        -0.0012245461271793916,
+        0.0011721141902708164
+      ],
+      "rmse_per_spin": 0.002732303511364835,
+      "median_abs_err_over_sd": 0.11311809056718111,
+      "mean_seconds": 31.40185131268023,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.82,
+      "coverage_ci": [
+        0.7333264161369926,
+        0.8829977450105364
+      ],
+      "coverage_trials": 100
+    },
+    {
+      "method": "gflownet",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 20,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.007789050544428544,
+      "ci": [
+        0.006324799083027186,
+        0.009402538168053948
+      ],
+      "bias_per_spin": -0.0005284047949527141,
+      "bias_ci": [
+        -0.0021494222080704634,
+        0.001082902420035702
+      ],
+      "rmse_per_spin": 0.0037552384365752856,
+      "median_abs_err_over_sd": 0.11118910610192191,
+      "mean_seconds": 30.981280603100892,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.8,
+      "coverage_ci": [
+        0.7111708344068411,
+        0.8666330666689676
+      ],
+      "coverage_trials": 100
+    },
+    {
+      "method": "gflownet",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 20,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.013491008870897634,
+      "ci": [
+        0.010939815619554823,
+        0.016210472412122322
+      ],
+      "bias_per_spin": -0.002775880776040845,
+      "bias_ci": [
+        -0.00550442089037644,
+        0.0001241902145552656
+      ],
+      "rmse_per_spin": 0.006853808615358114,
+      "median_abs_err_over_sd": 0.1515043175853036,
+      "mean_seconds": 30.69910743406043,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.76,
+      "coverage_ci": [
+        0.6676766365018553,
+        0.8330867444305122
+      ],
+      "coverage_trials": 100
+    },
+    {
+      "method": "gflownet",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 20,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.023996703927186818,
+      "ci": [
+        0.020428410981705586,
+        0.02778519018298177
+      ],
+      "bias_per_spin": -0.011422154687459817,
+      "bias_ci": [
+        -0.015795282745146574,
+        -0.006524822100251739
+      ],
+      "rmse_per_spin": 0.01556654792716872,
+      "median_abs_err_over_sd": 0.2614082880086114,
+      "mean_seconds": 30.597315765231333,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.71,
+      "coverage_ci": [
+        0.6146110882442888,
+        0.7898516425087772
+      ],
+      "coverage_trials": 100
+    },
+    {
+      "method": "gflownet",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 20,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.05140481322069914,
+      "ci": [
+        0.04524117215357674,
+        0.05751034243913704
+      ],
+      "bias_per_spin": -0.041253448898906656,
+      "bias_ci": [
+        -0.05072357133183418,
+        -0.0303923269386924
+      ],
+      "rmse_per_spin": 0.04739567424508731,
+      "median_abs_err_over_sd": 0.4878061080588499,
+      "mean_seconds": 30.593788817589814,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.47,
+      "coverage_ci": [
+        0.3751081795934127,
+        0.5671114302990063
+      ],
+      "coverage_trials": 100
+    },
+    {
+      "method": "mf",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.02125495137251353,
+      "ci": [
+        0.02098734402160539,
+        0.021522178600517458
+      ],
+      "bias_per_spin": -0.02125495137251353,
+      "bias_ci": [
+        -0.02153396333012644,
+        -0.020994638532640303
+      ],
+      "rmse_per_spin": 0.021340771244139585,
+      "median_abs_err_over_sd": 11.024312950960384,
+      "mean_seconds": 0.0013296142969866196,
+      "mean_energy_evals": 1015.8040000000001
+    },
+    {
+      "method": "mf",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.08171929913103504,
+      "ci": [
+        0.08090942417280196,
+        0.08253553360672851
+      ],
+      "bias_per_spin": -0.08171929913103507,
+      "bias_ci": [
+        -0.08254233386357447,
+        -0.08089990333950134
+      ],
+      "rmse_per_spin": 0.08193889183328253,
+      "median_abs_err_over_sd": 9.711527452446582,
+      "mean_seconds": 0.01323281183200197,
+      "mean_energy_evals": 10248.940999999999
+    },
+    {
+      "method": "mf",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.10811127163647345,
+      "ci": [
+        0.10622996282479015,
+        0.10998140878522138
+      ],
+      "bias_per_spin": -0.10811127163647345,
+      "bias_ci": [
+        -0.1099798267765137,
+        -0.10626479256021934
+      ],
+      "rmse_per_spin": 0.10894573571588896,
+      "median_abs_err_over_sd": 5.3185202964787806,
+      "mean_seconds": 0.005989179309994142,
+      "mean_energy_evals": 3779.2180000000003
+    },
+    {
+      "method": "mf",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.10732394821194963,
+      "ci": [
+        0.10508180222953535,
+        0.10955863308534548
+      ],
+      "bias_per_spin": -0.10732394821194963,
+      "bias_ci": [
+        -0.10948750446781394,
+        -0.10507647126498851
+      ],
+      "rmse_per_spin": 0.10851712713931105,
+      "median_abs_err_over_sd": 4.229492140799939,
+      "mean_seconds": 0.005825161942006162,
+      "mean_energy_evals": 3626.7869999999994
+    },
+    {
+      "method": "mf",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.10146613201463614,
+      "ci": [
+        0.0987693380136647,
+        0.10412475191039781
+      ],
+      "bias_per_spin": -0.10146613201463614,
+      "bias_ci": [
+        -0.10411356196220059,
+        -0.09881183024018643
+      ],
+      "rmse_per_spin": 0.10328683131356367,
+      "median_abs_err_over_sd": 2.7333690171114613,
+      "mean_seconds": 0.005426840693997292,
+      "mean_energy_evals": 3326.312
+    },
+    {
+      "method": "mf",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.09020511961239183,
+      "ci": [
+        0.08733929854735735,
+        0.09312200365116888
+      ],
+      "bias_per_spin": -0.09020511961239183,
+      "bias_ci": [
+        -0.09306079956140827,
+        -0.08728928981976085
+      ],
+      "rmse_per_spin": 0.09260472832392672,
+      "median_abs_err_over_sd": 1.6194366712058614,
+      "mean_seconds": 0.00470431534904128,
+      "mean_energy_evals": 2847.199
+    },
+    {
+      "method": "mf",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0751613422798852,
+      "ci": [
+        0.07228624515974277,
+        0.07806185523228097
+      ],
+      "bias_per_spin": -0.0751613422798852,
+      "bias_ci": [
+        -0.07804259628218943,
+        -0.07234213946240746
+      ],
+      "rmse_per_spin": 0.0780101625984235,
+      "median_abs_err_over_sd": 0.8450917354236673,
+      "mean_seconds": 0.0037464166359895902,
+      "mean_energy_evals": 2237.9210000000003
+    },
+    {
+      "method": "pa",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00011951650194568383,
+      "ci": [
+        0.00011422251549754627,
+        0.0001248995254894813
+      ],
+      "bias_per_spin": -1.9425498407573245e-06,
+      "bias_ci": [
+        -1.1751593901966814e-05,
+        7.551221880237684e-06
+      ],
+      "rmse_per_spin": 6.97391014429924e-05,
+      "median_abs_err_over_sd": 0.025392008475387067,
+      "mean_seconds": 0.09110811646304683,
+      "mean_energy_evals": 99000.0,
+      "coverage": 0.952,
+      "coverage_ci": [
+        0.936933911349866,
+        0.963606698979192
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "pa",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0002668231657383453,
+      "ci": [
+        0.00025451475114163084,
+        0.00027950312153335755
+      ],
+      "bias_per_spin": 8.562188122664202e-06,
+      "bias_ci": [
+        -1.3683983764012754e-05,
+        3.0150502300706597e-05
+      ],
+      "rmse_per_spin": 0.00015831988541314731,
+      "median_abs_err_over_sd": 0.011935685917526338,
+      "mean_seconds": 0.0890280408959934,
+      "mean_energy_evals": 99000.0,
+      "coverage": 0.955,
+      "coverage_ci": [
+        0.9403171620637766,
+        0.9662004877143683
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "pa",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0004335877866897152,
+      "ci": [
+        0.0004122004165325041,
+        0.0004551172676940266
+      ],
+      "bias_per_spin": 7.950491541870681e-06,
+      "bias_ci": [
+        -2.5086434343691886e-05,
+        4.135732224107942e-05
+      ],
+      "rmse_per_spin": 0.00023727240165045792,
+      "median_abs_err_over_sd": 0.007225378038271358,
+      "mean_seconds": 0.08594281934700668,
+      "mean_energy_evals": 99000.0,
+      "coverage": 0.949,
+      "coverage_ci": [
+        0.9335645136552383,
+        0.9609990572247332
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "pa",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0004992170191920779,
+      "ci": [
+        0.0004746545419374962,
+        0.0005246269544810565
+      ],
+      "bias_per_spin": 1.5277026994443217e-05,
+      "bias_ci": [
+        -2.0580571324028634e-05,
+        5.143355829025722e-05
+      ],
+      "rmse_per_spin": 0.00026284914221330456,
+      "median_abs_err_over_sd": 0.006559861780439734,
+      "mean_seconds": 0.08484399123700676,
+      "mean_energy_evals": 99000.0,
+      "coverage": 0.947,
+      "coverage_ci": [
+        0.9313253831625082,
+        0.9592534947514054
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "pa",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0006336964270411851,
+      "ci": [
+        0.000600108345704907,
+        0.0006690232460766733
+      ],
+      "bias_per_spin": -9.051289669709255e-06,
+      "bias_ci": [
+        -5.9857840940591996e-05,
+        4.287982705757026e-05
+      ],
+      "rmse_per_spin": 0.00036425019271163863,
+      "median_abs_err_over_sd": 0.005482269466780787,
+      "mean_seconds": 0.08221572901507353,
+      "mean_energy_evals": 99000.0,
+      "coverage": 0.951,
+      "coverage_ci": [
+        0.9358092984933898,
+        0.9627389653526394
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "pa",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0007818488439893032,
+      "ci": [
+        0.0007376469363869349,
+        0.0008279203543172137
+      ],
+      "bias_per_spin": 2.07901256605784e-05,
+      "bias_ci": [
+        -4.187119495192531e-05,
+        8.258275612783503e-05
+      ],
+      "rmse_per_spin": 0.0004553491717854422,
+      "median_abs_err_over_sd": 0.005220126844679564,
+      "mean_seconds": 0.07969064754702412,
+      "mean_energy_evals": 99000.0,
+      "coverage": 0.958,
+      "coverage_ci": [
+        0.9437155747733968,
+        0.9687791144538346
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "pa",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0010520169249966925,
+      "ci": [
+        0.000996493371348978,
+        0.0011075962552904413
+      ],
+      "bias_per_spin": -4.0737832122739115e-05,
+      "bias_ci": [
+        -0.0001170450747142782,
+        3.6629056227716484e-05
+      ],
+      "rmse_per_spin": 0.0005623050596750138,
+      "median_abs_err_over_sd": 0.003996489887296549,
+      "mean_seconds": 0.07501813500798743,
+      "mean_energy_evals": 99000.0,
+      "coverage": 0.948,
+      "coverage_ci": [
+        0.93244426068072,
+        0.9601269637162226
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "pt",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00012923347227884497,
+      "ci": [
+        0.00012257382616001882,
+        0.0001361063520211213
+      ],
+      "bias_per_spin": 4.621294413256747e-06,
+      "bias_ci": [
+        -4.9912098888147636e-06,
+        1.4425921920857165e-05
+      ],
+      "rmse_per_spin": 7.115959724488826e-05,
+      "median_abs_err_over_sd": 0.027258090291416782,
+      "mean_seconds": 0.11145308490802563,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "pt",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00027894807395856887,
+      "ci": [
+        0.00026620324795859117,
+        0.00029157960952631373
+      ],
+      "bias_per_spin": -2.1148182867664714e-05,
+      "bias_ci": [
+        -4.2484774234895625e-05,
+        -1.6761037036475946e-07
+      ],
+      "rmse_per_spin": 0.00015636133296981705,
+      "median_abs_err_over_sd": 0.0124945210129868,
+      "mean_seconds": 0.11372600457900081,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "pt",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0004518972590375561,
+      "ci": [
+        0.00042823327858001163,
+        0.0004760695637265722
+      ],
+      "bias_per_spin": -7.670994141717891e-05,
+      "bias_ci": [
+        -0.00010972650075273795,
+        -4.294283021970956e-05
+      ],
+      "rmse_per_spin": 0.00025052504153161455,
+      "median_abs_err_over_sd": 0.007489988766458459,
+      "mean_seconds": 0.11254945456902352,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "pt",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00051494315519939,
+      "ci": [
+        0.000491335268760025,
+        0.0005391817130596052
+      ],
+      "bias_per_spin": -6.707587940827064e-05,
+      "bias_ci": [
+        -0.00011001585618500565,
+        -2.4942694807947812e-05
+      ],
+      "rmse_per_spin": 0.0003073081008173227,
+      "median_abs_err_over_sd": 0.007677198472321274,
+      "mean_seconds": 0.11156389200603006,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "pt",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0006612229749774781,
+      "ci": [
+        0.0006284946769201165,
+        0.0006956449488342094
+      ],
+      "bias_per_spin": -0.00011949804902566759,
+      "bias_ci": [
+        -0.00016945600052345035,
+        -6.784041508738498e-05
+      ],
+      "rmse_per_spin": 0.0003811932112385595,
+      "median_abs_err_over_sd": 0.006156748084110968,
+      "mean_seconds": 0.10936637788999178,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "pt",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0008742151081095972,
+      "ci": [
+        0.0008273864587706615,
+        0.0009218294504226353
+      ],
+      "bias_per_spin": -0.00024030649966769784,
+      "bias_ci": [
+        -0.00030244724345067933,
+        -0.000178124318493012
+      ],
+      "rmse_per_spin": 0.0005148018465691505,
+      "median_abs_err_over_sd": 0.006704400715078356,
+      "mean_seconds": 0.10630819383500603,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "pt",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0011205200452784367,
+      "ci": [
+        0.0010681040745164094,
+        0.00117278358442156
+      ],
+      "bias_per_spin": -0.000506713739768252,
+      "bias_ci": [
+        -0.0005791839651600813,
+        -0.0004348307713281092
+      ],
+      "rmse_per_spin": 0.0007230160814505533,
+      "median_abs_err_over_sd": 0.006070764606670505,
+      "mean_seconds": 0.10137280889498106,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "sa_ti",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00010981352840026266,
+      "ci": [
+        0.00010447883490571886,
+        0.00011514775363258154
+      ],
+      "bias_per_spin": -6.4013654387405e-07,
+      "bias_ci": [
+        -9.36858389361404e-06,
+        8.017886821103925e-06
+      ],
+      "rmse_per_spin": 6.292844689418095e-05,
+      "median_abs_err_over_sd": 0.02068179341481932,
+      "mean_seconds": 0.06239591206103432,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "sa_ti",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0002375996958614374,
+      "ci": [
+        0.0002261862212158144,
+        0.000249202976477183
+      ],
+      "bias_per_spin": 1.1752939535852482e-05,
+      "bias_ci": [
+        -6.260616533551828e-06,
+        2.994632348287423e-05
+      ],
+      "rmse_per_spin": 0.00013202842544003687,
+      "median_abs_err_over_sd": 0.011273433545029306,
+      "mean_seconds": 0.06433369383199898,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "sa_ti",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0003811890400019144,
+      "ci": [
+        0.00036099603384129894,
+        0.00040169285064702996
+      ],
+      "bias_per_spin": -5.741529356458071e-06,
+      "bias_ci": [
+        -3.7815609017862836e-05,
+        2.5545309534280996e-05
+      ],
+      "rmse_per_spin": 0.00022766092221076958,
+      "median_abs_err_over_sd": 0.00612940871553672,
+      "mean_seconds": 0.06232256240301831,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "sa_ti",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00042178208134828856,
+      "ci": [
+        0.0004020983196268871,
+        0.00044182454786224
+      ],
+      "bias_per_spin": 1.0137408773395182e-06,
+      "bias_ci": [
+        -3.160436340922852e-05,
+        3.394589122621627e-05
+      ],
+      "rmse_per_spin": 0.00023866378994983681,
+      "median_abs_err_over_sd": 0.006722468636392866,
+      "mean_seconds": 0.06127279035500214,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "sa_ti",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.000550300969322914,
+      "ci": [
+        0.0005227655423103031,
+        0.0005782072693681796
+      ],
+      "bias_per_spin": 1.2245187673863534e-06,
+      "bias_ci": [
+        -4.3536013848552714e-05,
+        4.6025823240297215e-05
+      ],
+      "rmse_per_spin": 0.00032235929774122955,
+      "median_abs_err_over_sd": 0.004785527244557895,
+      "mean_seconds": 0.058897918424987435,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "sa_ti",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0007052874119855087,
+      "ci": [
+        0.0006715778760159216,
+        0.0007402994442532811
+      ],
+      "bias_per_spin": -3.5460943078313565e-05,
+      "bias_ci": [
+        -9.229269463888342e-05,
+        2.0348378847151518e-05
+      ],
+      "rmse_per_spin": 0.0004111363022538767,
+      "median_abs_err_over_sd": 0.005292959157484605,
+      "mean_seconds": 0.055998676059954955,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "sa_ti",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0009193953409738414,
+      "ci": [
+        0.0008720665683524327,
+        0.0009664489135924575
+      ],
+      "bias_per_spin": -3.457158363374146e-06,
+      "bias_ci": [
+        -7.086428187558095e-05,
+        6.446169699982856e-05
+      ],
+      "rmse_per_spin": 0.0004981811435990469,
+      "median_abs_err_over_sd": 0.004028006857274592,
+      "mean_seconds": 0.051785755678016354,
+      "mean_energy_evals": 100000.0
+    },
+    {
+      "method": "smc",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0001239173007226802,
+      "ci": [
+        0.00011812418987455223,
+        0.00012988276469105993
+      ],
+      "bias_per_spin": -8.37864322071169e-06,
+      "bias_ci": [
+        -1.831516496912351e-05,
+        1.4520044421762123e-06
+      ],
+      "rmse_per_spin": 7.10338486388204e-05,
+      "median_abs_err_over_sd": 0.025525829058244666,
+      "mean_seconds": 0.08067324466301035,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.955,
+      "coverage_ci": [
+        0.9403171620637766,
+        0.9662004877143683
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "smc",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0002650616268304868,
+      "ci": [
+        0.0002522172581877274,
+        0.00027808296350520067
+      ],
+      "bias_per_spin": -2.048997191770977e-05,
+      "bias_ci": [
+        -4.13927870686182e-05,
+        5.3077958291318493e-08
+      ],
+      "rmse_per_spin": 0.00015190787873518773,
+      "median_abs_err_over_sd": 0.01208623098345011,
+      "mean_seconds": 0.07878712624299078,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.956,
+      "coverage_ci": [
+        0.9414482108495923,
+        0.9670617854115815
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "smc",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00045619504041337263,
+      "ci": [
+        0.000435084100740531,
+        0.00047767076507459837
+      ],
+      "bias_per_spin": -2.0881819900400613e-05,
+      "bias_ci": [
+        -5.992862198945463e-05,
+        1.858889004683452e-05
+      ],
+      "rmse_per_spin": 0.0002813961272431552,
+      "median_abs_err_over_sd": 0.008615305988606612,
+      "mean_seconds": 0.07568612718895384,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.949,
+      "coverage_ci": [
+        0.9335645136552383,
+        0.9609990572247332
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "smc",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0005009254346372233,
+      "ci": [
+        0.00047426156831644996,
+        0.0005280497992789448
+      ],
+      "bias_per_spin": -2.3227528457434692e-05,
+      "bias_ci": [
+        -6.121265859490819e-05,
+        1.4302256393764817e-05
+      ],
+      "rmse_per_spin": 0.00027288312394138626,
+      "median_abs_err_over_sd": 0.006260647360442892,
+      "mean_seconds": 0.07471763163202558,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.953,
+      "coverage_ci": [
+        0.9380600619184716,
+        0.9644728948936154
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "smc",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0006641525148000747,
+      "ci": [
+        0.0006287239071244279,
+        0.0007006745589377866
+      ],
+      "bias_per_spin": 1.2599909983657961e-05,
+      "bias_ci": [
+        -3.66100999465292e-05,
+        6.23031529882031e-05
+      ],
+      "rmse_per_spin": 0.00036108357202881044,
+      "median_abs_err_over_sd": 0.006868308189916829,
+      "mean_seconds": 0.07266017717698196,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.955,
+      "coverage_ci": [
+        0.9403171620637766,
+        0.9662004877143683
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "smc",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0008808256892923769,
+      "ci": [
+        0.0008341333311396,
+        0.0009287612885278579
+      ],
+      "bias_per_spin": 5.928434656967388e-06,
+      "bias_ci": [
+        -6.184579038187575e-05,
+        7.427768988232341e-05
+      ],
+      "rmse_per_spin": 0.0004904881582419749,
+      "median_abs_err_over_sd": 0.005573130788535448,
+      "mean_seconds": 0.06957169969703682,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.951,
+      "coverage_ci": [
+        0.9358092984933898,
+        0.9627389653526394
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "smc",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0011704234534590024,
+      "ci": [
+        0.0011091352573613703,
+        0.001231581737472774
+      ],
+      "bias_per_spin": -6.771880086398898e-05,
+      "bias_ci": [
+        -0.00014544164680805433,
+        1.1828718461572819e-05
+      ],
+      "rmse_per_spin": 0.0005795110467925041,
+      "median_abs_err_over_sd": 0.0036039918476803937,
+      "mean_seconds": 0.06589221605298917,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.959,
+      "coverage_ci": [
+        0.9448520067923587,
+        0.9696350289179017
+      ],
+      "coverage_trials": 1000
+    },
+    {
+      "method": "tap",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.0003550420516722542,
+      "ci": [
+        0.0003178501945875022,
+        0.0003922730927052863
+      ],
+      "bias_per_spin": 4.122728630361024e-05,
+      "bias_ci": [
+        -2.0867223077434585e-05,
+        0.00010149059814318565
+      ],
+      "rmse_per_spin": 0.00044610221249572645,
+      "median_abs_err_over_sd": 0.1560158685628779,
+      "mean_seconds": 0.0024388781619763904,
+      "mean_energy_evals": 1533.652
+    },
+    {
+      "method": "tap",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00305856150542283,
+      "ci": [
+        0.002766246686031462,
+        0.003360342202682925
+      ],
+      "bias_per_spin": 0.0007992310814858665,
+      "bias_ci": [
+        0.0002878747056876074,
+        0.0012939907470921358
+      ],
+      "rmse_per_spin": 0.003719427866070094,
+      "median_abs_err_over_sd": 0.3531656146117709,
+      "mean_seconds": 0.003941425606961275,
+      "mean_energy_evals": 2520.6890000000003
+    },
+    {
+      "method": "tap",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.010948962874493554,
+      "ci": [
+        0.010034895361371893,
+        0.011869957647930671
+      ],
+      "bias_per_spin": 0.005225975866131548,
+      "bias_ci": [
+        0.003599513502368539,
+        0.00683654795384255
+      ],
+      "rmse_per_spin": 0.01288731914754038,
+      "median_abs_err_over_sd": 0.5199353545764935,
+      "mean_seconds": 0.005334113347013043,
+      "mean_energy_evals": 3417.705
+    },
+    {
+      "method": "tap",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.015164533232470861,
+      "ci": [
+        0.013928781574589441,
+        0.016459553479533002
+      ],
+      "bias_per_spin": 0.008722750553258007,
+      "bias_ci": [
+        0.006618341922610492,
+        0.010811019203197034
+      ],
+      "rmse_per_spin": 0.017671011296074866,
+      "median_abs_err_over_sd": 0.558949600167608,
+      "mean_seconds": 0.004823666457012223,
+      "mean_energy_evals": 3058.972
+    },
+    {
+      "method": "tap",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.02749116667705269,
+      "ci": [
+        0.025220701570077976,
+        0.029763733502107603
+      ],
+      "bias_per_spin": 0.02050633818325263,
+      "bias_ci": [
+        0.016951745902555545,
+        0.023816362406066043
+      ],
+      "rmse_per_spin": 0.0319112997740362,
+      "median_abs_err_over_sd": 0.7216029295979791,
+      "mean_seconds": 0.0033395941000435416,
+      "mean_energy_evals": 2127.9159999999997
+    },
+    {
+      "method": "tap",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.06064767770936202,
+      "ci": [
+        0.0561121092087394,
+        0.06523107271376635
+      ],
+      "bias_per_spin": 0.05553867187700692,
+      "bias_ci": [
+        0.049712028042341046,
+        0.061188938940119286
+      ],
+      "rmse_per_spin": 0.06936960398973106,
+      "median_abs_err_over_sd": 1.0966689024350416,
+      "mean_seconds": 0.0015748233939721105,
+      "mean_energy_evals": 976.8079999999999
+    },
+    {
+      "method": "tap",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 200,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.18171688693582552,
+      "ci": [
+        0.17223740363844872,
+        0.190964473340253
+      ],
+      "bias_per_spin": 0.18010559506236612,
+      "bias_ci": [
+        0.17014235509634779,
+        0.18976756918541834
+      ],
+      "rmse_per_spin": 0.193891537209388,
+      "median_abs_err_over_sd": 2.058981220328633,
+      "mean_seconds": 0.003496876114952101,
+      "mean_energy_evals": 2197.842
+    },
+    {
+      "method": "van_made",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.3,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 1.7162448426773442e-05,
+      "ci": [
+        1.560222675125569e-05,
+        1.8661769448625298e-05
+      ],
+      "bias_per_spin": -3.7535738490134135e-06,
+      "bias_ci": [
+        -6.252455019976066e-06,
+        -1.1816618161629605e-06
+      ],
+      "rmse_per_spin": 8.033081043462749e-06,
+      "median_abs_err_over_sd": 0.003780572787447138,
+      "mean_seconds": 2.4672671981667853,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.9733333333333334,
+      "coverage_ci": [
+        0.9334461094878556,
+        0.989582059177032
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "van_made",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.6,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 2.7105138504591116e-05,
+      "ci": [
+        2.3517652069217935e-05,
+        3.085580969774597e-05
+      ],
+      "bias_per_spin": 8.040135167538173e-07,
+      "bias_ci": [
+        -4.00577684390941e-06,
+        5.467218670606964e-06
+      ],
+      "rmse_per_spin": 1.3453020911412169e-05,
+      "median_abs_err_over_sd": 0.0010582935093203152,
+      "mean_seconds": 2.4669689388867364,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.9533333333333334,
+      "coverage_ci": [
+        0.9068135276008725,
+        0.9772134508387381
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "van_made",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 0.9,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 5.7371896347358455e-05,
+      "ci": [
+        5.055566303631891e-05,
+        6.453343998641094e-05
+      ],
+      "bias_per_spin": 6.57847843022018e-06,
+      "bias_ci": [
+        -5.584498480710518e-06,
+        1.8269788998342054e-05
+      ],
+      "rmse_per_spin": 3.3912630214765685e-05,
+      "median_abs_err_over_sd": 0.0011224631890126425,
+      "mean_seconds": 2.5011123937932522,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.9133333333333333,
+      "coverage_ci": [
+        0.8573717762637809,
+        0.9486528217252759
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "van_made",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.0,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 5.847264341967633e-05,
+      "ci": [
+        5.1639155264221325e-05,
+        6.535134089212431e-05
+      ],
+      "bias_per_spin": -5.058913731335538e-06,
+      "bias_ci": [
+        -1.6345889032662728e-05,
+        6.400291161616629e-06
+      ],
+      "rmse_per_spin": 3.207736998704336e-05,
+      "median_abs_err_over_sd": 0.001015364469761988,
+      "mean_seconds": 2.4873630075599307,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.94,
+      "coverage_ci": [
+        0.8899102291652979,
+        0.9681159557907947
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "van_made",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.2,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 7.564436644778856e-05,
+      "ci": [
+        6.616278702983743e-05,
+        8.50389772934156e-05
+      ],
+      "bias_per_spin": -7.002695525940202e-06,
+      "bias_ci": [
+        -2.1820765945438234e-05,
+        7.172586598804116e-06
+      ],
+      "rmse_per_spin": 4.147931530559362e-05,
+      "median_abs_err_over_sd": 0.0007865740378437902,
+      "mean_seconds": 2.4896234979066256,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.9333333333333333,
+      "coverage_ci": [
+        0.8816376448839411,
+        0.9633881433303926
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "van_made",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 1.5,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 8.612882663066084e-05,
+      "ci": [
+        7.367860635627942e-05,
+        0.00010089802072450166
+      ],
+      "bias_per_spin": 1.5102087952814833e-05,
+      "bias_ci": [
+        -4.008069934970465e-06,
+        3.40715165338791e-05
+      ],
+      "rmse_per_spin": 5.497811878042195e-05,
+      "median_abs_err_over_sd": 0.0005720074021280256,
+      "mean_seconds": 2.4904459545932327,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.96,
+      "coverage_ci": [
+        0.915486535783444,
+        0.9815408393979256
+      ],
+      "coverage_trials": 150
+    },
+    {
+      "method": "van_made",
+      "family": "gaussian",
+      "n": 24,
+      "beta": 2.0,
+      "instances": 30,
+      "seeds": 5,
+      "mean_abs_err_per_spin": 0.00012334609227382978,
+      "ci": [
+        0.00010595233121887574,
+        0.00014039032768392598
+      ],
+      "bias_per_spin": -1.893043961407967e-05,
+      "bias_ci": [
+        -4.425960856544117e-05,
+        6.052503546608337e-06
+      ],
+      "rmse_per_spin": 7.190788432622553e-05,
+      "median_abs_err_over_sd": 0.0004857168596230301,
+      "mean_seconds": 2.4780859695266804,
+      "mean_energy_evals": 100000.0,
+      "coverage": 0.92,
+      "coverage_ci": [
+        0.8653786362494686,
+        0.953646358481347
+      ],
+      "coverage_trials": 150
+    }
+  ]
+}

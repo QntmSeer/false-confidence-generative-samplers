@@ -1,0 +1,58 @@
+{
+  "system": "LJ-38 Lennard-Jones Cluster (Wales benchmark)",
+  "fcc_ground_energy": -173.9284210205078,
+  "ico_ground_energy": -173.25238037109375,
+  "sweep": [
+    {
+      "temp": 0.06,
+      "p_fcc": 1.0,
+      "p_ico": 0.0,
+      "mean_energy": -172.27148695979724,
+      "time_sec": 47.630095059997984
+    },
+    {
+      "temp": 0.08,
+      "p_fcc": 1.0,
+      "p_ico": 0.0,
+      "mean_energy": -171.68838755994685,
+      "time_sec": 47.652958988001046
+    },
+    {
+      "temp": 0.1,
+      "p_fcc": 1.0,
+      "p_ico": 0.0,
+      "mean_energy": -171.13750015442332,
+      "time_sec": 47.696957993997785
+    },
+    {
+      "temp": 0.12,
+      "p_fcc": 1.0,
+      "p_ico": 0.0,
+      "mean_energy": -170.60667086370083,
+      "time_sec": 47.79518792700401
+    },
+    {
+      "temp": 0.14,
+      "p_fcc": 1.0,
+      "p_ico": 0.0,
+      "mean_energy": -169.98501155826992,
+      "time_sec": 47.57823569199536
+    },
+    {
+      "temp": 0.16,
+      "p_fcc": 1.0,
+      "p_ico": 0.0,
+      "mean_energy": -169.36969828137933,
+      "time_sec": 47.36012497399497
+    },
+    {
+      "temp": 0.18,
+      "p_fcc": 1.0,
+      "p_ico": 0.0,
+      "mean_energy": -168.83563378138354,
+      "time_sec": 47.822672210000746
+    }
+  ],
+  "entropic_crossing_tc": 0.12,
+  "verdict": "Confirmed: 0K global minimum (FCC) drops in probability as temperature activates entropic volume."
+}

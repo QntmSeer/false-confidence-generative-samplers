@@ -1,0 +1,15 @@
+Self-normalized diagnostics such as the effective sample size and delta-method confidence intervals certify that a proposal fits the regions it visits, and nothing else (Proposition~\ref{prop:unvisited}). When a generative sampler omits an entropic or energetic basin carrying Boltzmann mass $\alpha$, the ESS remains high and nominal intervals shrink around a biased estimate, collapsing empirical coverage toward zero.
+
+Against exact combinatorial ground truth on spin glasses, masked diffusion and GFlowNets exhibit severe calibration collapse in the frustrated phase (covering the true free energy in only $\vcovDiffTwo\%$ and $\vcovGFNTwo\%$ of runs at $\beta=2$), while normalized autoregressive networks (VAN-MADE) and classical annealing maintain calibrated 95\% intervals. On a continuous molecular landscape, an alanine dipeptide Boltzmann generator exhibits identical diagnostic blindness, dropping the $C_{7\rm ax}$ basin ($\valaAlpha\%$ mass) while reporting an ESS of $\valaESS\%$ and nominal coverage of $\valaCov\%$. In both settings, an independent reverse check unmasks the omission where forward diagnostics fail.
+
+Translating this bound to macromolecular systems shows that the practical impact of dropped states depends heavily on equilibrium basin mass: while omitting rare transient intermediates causes small bias, omitting macroscopic folded states shifts free energies by $\vchigLitBias$ to $\vtrpLitBias$\,kcal/mol in consensus Anton and NMR baselines, exceeding lead-optimization thresholds. Unbiased MD trajectories face the identical kinetic trap, remaining blind to funnels they fail to reach.
+
+Our findings suggest that self-reported forward metrics should be supplemented with independent bidirectional checks, particularly when evaluating samplers on complex physical systems where ground truth is unknown, and that new architectures should be tested against solvable references where mode drop can be proven.
+
+\paragraph{Recommended evaluation protocol for practitioners.}
+To prevent false confidence in scientific applications, we recommend a four-point evaluation protocol:
+(1)~\emph{Do not rely on forward metrics alone}: high ESS certifies only local fit within visited basins, providing zero signal of omitted Boltzmann mass.
+(2)~\emph{Deploy bidirectional checks}: evaluate the reverse gap $G_{\rm rev}$ against an offline library of independent reference configurations (with mixing verified via $\hat{R} < 1.05$) before high-throughput deployment.
+(3)~\emph{Pre-flight audit on solvable exact references}: benchmark new neural architectures on frustrated systems with exact partition functions (such as SpinGlassBench or 2D Ramachandran quadrature) to expose mode truncation.
+(4)~\emph{Anchor macromolecular claims to converged baselines}: calibrate population fractions against long-timescale equilibrium data (such as multi-microsecond Anton MD or NMR ensembles) rather than unverified single trajectories.
+Crucially, self-normalized diagnostics should never be treated as proof of convergence without orthogonal validation.
