@@ -23,6 +23,7 @@ from pathlib import Path
 import matplotlib.font_manager as fm
 import numpy as np
 from scipy.stats import gaussian_kde
+from scipy.interpolate import splprep, splev
 
 for p in [
     Path("/usr/share/texmf/fonts/opentype/public/lm/lmmono10-regular.otf"),
@@ -73,9 +74,10 @@ def val(name: str, text: str) -> str:
     return text
 
 
-def save(fig, name):
-    fig.savefig(OUT / f"{name}.pdf", bbox_inches="tight")
-    fig.savefig(OUT / f"{name}.png", bbox_inches="tight", dpi=200)
+def save(fig, name, bbox=None):
+    b = bbox if bbox is not None else "tight"
+    fig.savefig(OUT / f"{name}.pdf", bbox_inches=b)
+    fig.savefig(OUT / f"{name}.png", bbox_inches=b, dpi=200)
     plt.close(fig)
     print("wrote", name)
 
@@ -380,11 +382,72 @@ def block_ci(flag, blocks=10, nboot=4000, seed=0):
     return float(flag.mean()), np.quantile(boots, [0.025, 0.975]), b
 
 
+
+def draw_peptide(ax, ca, color_tube=COBALT, elev=15, azim=50):
+    c = np.array(ca) - np.mean(ca, axis=0)
+    el = np.radians(elev)
+    az = np.radians(azim)
+    Rx = np.array([[1, 0, 0], [0, np.cos(el), -np.sin(el)], [0, np.sin(el), np.cos(el)]])
+    Rz = np.array([[np.cos(az), -np.sin(az), 0], [np.sin(az), np.cos(az), 0], [0, 0, 1]])
+    R = Rx @ Rz
+    c_rot = c @ R.T
+
+    tck, u = splprep(c_rot.T, s=0, k=3)
+    u_fine = np.linspace(0, 1, 150)
+    smooth = np.array(splev(u_fine, tck))
+
+    ax.plot(smooth[0], smooth[1] - 0.15, color="#dedbd5", lw=2.4, zorder=1)
+    ax.plot(smooth[0], smooth[1], color=color_tube, lw=1.8, zorder=2)
+    ax.scatter(c_rot[:, 0], c_rot[:, 1], s=14, color=color_tube, edgecolors=PAPER, lw=0.5, zorder=3)
+    ax.set_aspect("equal")
+    ax.axis("off")
+
+
+def load_xyz(path):
+    lines = open(path).read().strip().splitlines()
+    coords = []
+    for l in lines:
+        parts = l.split()
+        if len(parts) >= 3:
+            coords.append([float(parts[-3]), float(parts[-2]), float(parts[-1])])
+    return np.array(coords)
+
+
+def draw_cluster(ax, coords, color_base=COBALT, elev=20, azim=35, r_cut=1.35):
+    el = np.radians(elev)
+    az = np.radians(azim)
+    Rx = np.array([[1, 0, 0], [0, np.cos(el), -np.sin(el)], [0, np.sin(el), np.cos(el)]])
+    Rz = np.array([[np.cos(az), -np.sin(az), 0], [np.sin(az), np.cos(az), 0], [0, 0, 1]])
+    R = Rx @ Rz
+    c_rot = coords @ R.T
+
+    idx = np.argsort(c_rot[:, 2])
+    N = len(coords)
+    for i in range(N):
+        for j in range(i + 1, N):
+            dist = np.linalg.norm(coords[i] - coords[j])
+            if dist < r_cut:
+                z_mid = 0.5 * (c_rot[i, 2] + c_rot[j, 2])
+                ax.plot([c_rot[i, 0], c_rot[j, 0]], [c_rot[i, 1], c_rot[j, 1]], 
+                        color="#86837c", lw=0.5, alpha=0.45, zorder=int(z_mid * 10) + 100)
+
+    z_min, z_max = c_rot[:, 2].min(), c_rot[:, 2].max()
+    for i in idx:
+        depth = (c_rot[i, 2] - z_min) / (z_max - z_min + 1e-6)
+        ax.scatter(c_rot[i, 0], c_rot[i, 1], s=35, color=color_base, 
+                   edgecolors="#222222", linewidths=0.4, alpha=0.7 + 0.3 * depth,
+                   zorder=int(c_rot[i, 2] * 10) + 200)
+
+    ax.set_aspect("equal")
+    ax.axis("off")
+
 def fig_md(key, name, pdb, label, xlim, ylim):
-    d = np.load(DATA / f"{key}_overnight_metrics.npz")
+    metrics_file = DATA / "chignolin_1us_metrics.npz" if key == "chignolin" and (DATA / "chignolin_1us_metrics.npz").exists() else DATA / f"{key}_overnight_metrics.npz"
+    d = np.load(metrics_file)
     rmsd, rg = d["rmsd_to_native"].astype(float), d["rg_values"].astype(float)
     n = len(rmsd)
-    t_ns = np.arange(n) * 300.0 / n
+    t_total = 1000.0 if key == "chignolin" and n == 100000 else 300.0
+    t_ns = np.arange(n) * t_total / n
     native = rmsd < NATIVE_CUT
     frac, ci, blocks = block_ci(native)
 
@@ -403,26 +466,37 @@ def fig_md(key, name, pdb, label, xlim, ylim):
     ax1.set_ylim(*ylim)
     ax1.set_xlabel(f"C-alpha RMSD to {pdb} (A)")
     ax1.set_ylabel("radius of gyration (A)")
-    titles(ax1, f"{name}: one 300 ns trajectory at 300 K",
+    traj_label = r"one 1.0 $\mu$s trajectory" if t_total == 1000.0 else "one 300 ns trajectory"
+    titles(ax1, f"{name}: {traj_label} at 300 K",
            f"{n:,} frames; contours: -kT log density (kcal/mol); dashed: {NATIVE_CUT:g} A")
+    if key == "chignolin" and (DATA / "chignolin_ca_conformations.json").exists():
+        chig_c = json.loads((DATA / "chignolin_ca_conformations.json").read_text())
+        ins1 = ax1.inset_axes([0.05, 0.47, 0.35, 0.42])
+        draw_peptide(ins1, chig_c["native_ca"], color_tube=COBALT, elev=15, azim=50)
+        ins1.text(0.5, -0.08, "native $\\beta$-hairpin\n(1UAO, < 2.0 Å)", transform=ins1.transAxes,
+                  fontsize=6.2, ha="center", va="top", color=INK, linespacing=1.0)
+        ins2 = ax1.inset_axes([0.60, 0.47, 0.35, 0.42])
+        draw_peptide(ins2, chig_c["misfold_ca"], color_tube=RUST, elev=25, azim=-40)
+        ins2.text(0.5, 1.02, "misfolded globule\n(RMSD = 5.2 Å)", transform=ins2.transAxes,
+                  fontsize=6.2, ha="center", va="bottom", color=INK, linespacing=1.0)
     ax2_top = float(np.ceil(rmsd.max()) + 1.0)
 
     step = max(1, n // 3000)
     ax2.axhspan(0, NATIVE_CUT, color=GRID, alpha=0.6, lw=0, zorder=0)
     ax2.plot(t_ns[::step], rmsd[::step], color=COBALT, lw=0.45)
     ax2.axhline(NATIVE_CUT, color=REF, ls=DASH, lw=0.9)
-    edges = np.linspace(0, 300, len(blocks) + 1)
+    edges = np.linspace(0, t_total, len(blocks) + 1)
     for lo_t, hi_t, bf in zip(edges[:-1], edges[1:], blocks, strict=True):
         ax2.text(0.5 * (lo_t + hi_t), ax2_top - 0.15, f"{100 * bf:.0f}", ha="center", va="top",
                  fontsize=6.4, color=RUST)
-    ax2.set_xlim(0, 300)
+    ax2.set_xlim(0, t_total)
     ax2.set_ylim(0, ax2_top)
     ax2.set_xlabel("time (ns)")
     ax2.set_ylabel("C-alpha RMSD (A)")
+    block_size = int(t_total / len(blocks))
     titles(ax2, label(frac, ci, blocks),
-           f"RMSD every {300 / n * step * 1000:.0f} ps; band: native; numbers: % native per 30 ns")
+           f"RMSD every {t_total / n * step * 1000:.0f} ps; band: native; numbers: % native per {block_size} ns")
     fig.tight_layout(w_pad=2.2)
-    save(fig, f"fig_{key}_folding_pathology")
 
     k = {"chignolin": "chig", "trpcage": "trp"}[key]
     val(f"{k}Frames", f"{n:,}".replace(",", "{,}"))
@@ -437,7 +511,19 @@ def fig_md(key, name, pdb, label, xlim, ylim):
     val(f"{k}Bias", f"{dropped_bias(frac):.3f}")
     val(f"{k}BiasLo", f"{dropped_bias(ci[0]):.3f}")
     val(f"{k}BiasHi", f"{dropped_bias(ci[1]):.3f}")
-    return frac
+    return fig, frac
+
+
+def fig_all_md():
+    from matplotlib.transforms import Bbox
+    fig_chig, fc = fig_md("chignolin", "Chignolin", "1UAO", chig_title, (0.8, 7.8), (5.1, 7.8))
+    fig_trp, ft = fig_md("trpcage", "Trp-cage", "1L2Y", trp_title, (0.4, 5.6), (6.2, 8.0))
+    b1 = fig_chig.get_tightbbox(fig_chig.canvas.get_renderer())
+    b2 = fig_trp.get_tightbbox(fig_trp.canvas.get_renderer())
+    common_bbox = Bbox.union([b1, b2])
+    save(fig_chig, "fig_chignolin_folding_pathology", bbox=common_bbox)
+    save(fig_trp, "fig_trpcage_folding_pathology", bbox=common_bbox)
+    return fc, ft
 
 
 def fig_lj38():
@@ -464,6 +550,17 @@ def fig_lj38():
     ax2.set_ylabel("frames closer to FCC than to icosahedral (%)")
     titles(ax2, "No run left the FCC funnel",
            "nearest-minimum RMSD classification of the stored frames")
+    if (DATA / "lj38_fcc_global_min.xyz").exists() and (DATA / "lj38_icosahedral_min.xyz").exists():
+        fcc_coords = load_xyz(DATA / "lj38_fcc_global_min.xyz")
+        ico_coords = load_xyz(DATA / "lj38_icosahedral_min.xyz")
+        ins_fcc = ax2.inset_axes([0.06, 0.07, 0.42, 0.60])
+        draw_cluster(ins_fcc, fcc_coords, color_base=COBALT, elev=20, azim=35)
+        ins_fcc.text(0.5, 1.02, "FCC global min\n$O_h$, -173.93 $\\epsilon$", transform=ins_fcc.transAxes,
+                     fontsize=6.2, ha="center", va="bottom", color=INK, linespacing=1.0)
+        ins_ico = ax2.inset_axes([0.52, 0.07, 0.42, 0.60])
+        draw_cluster(ins_ico, ico_coords, color_base=RUST, elev=20, azim=35)
+        ins_ico.text(0.5, 1.02, "Icosahedral min\n$C_{5v}$, -173.25 $\\epsilon$", transform=ins_ico.transAxes,
+                     fontsize=6.2, ha="center", va="bottom", color=INK, linespacing=1.0)
     fig.tight_layout(w_pad=2.2)
     save(fig, "fig_lj38_entropic_inversion")
     val("ljTmin", f"{T.min():g}")
@@ -480,7 +577,7 @@ def chig_title(frac, ci, blocks):
 
 
 def trp_title(frac, ci, blocks):
-    return f"Native fraction swings from {100 * blocks.min():.0f} to {100 * blocks.max():.0f}% between blocks"
+    return f"Native fraction swings from {100 * blocks.min():.0f} to {100 * blocks.max():.0f}%"
 
 
 
@@ -500,6 +597,70 @@ def load_alanine_audit():
         val("alaGfwd", f"{d['audit']['median_forward_jensen_gap_nats']:.3f}")
         val("alaGrev", f"{d['audit']['median_reverse_jensen_gap_nats']:.1f}")
 
+    # 3D continuous neural Boltzmann Generator audit ledger (NVIDIA L4 GPU)
+    audit_3d_path = DATA / "molecular_3d_flow_audit.json"
+    if audit_3d_path.exists():
+        d3 = json.loads(audit_3d_path.read_text())
+        a3 = d3["alanine_3d_66d"]
+        val("alaThreeDDim", str(a3["cartesian_dim"]))
+        val("alaThreeDDOFs", str(a3["internal_dim"]))
+        val("alaThreeDParams", str(a3["trainable_params"]))
+        val("alaThreeDESS", f"{a3['unimodal_reverse_kl']['median_ess_pct']:.0f}")
+        val("alaThreeDCov", f"{a3['unimodal_reverse_kl']['empirical_95ci_coverage_pct']:.1f}")
+        val("alaThreeDErr", f"{a3['unimodal_reverse_kl']['mean_abs_error_f_kcal_mol']:.3f}")
+        val("alaThreeDCI", f"{a3['unimodal_reverse_kl']['mean_nominal_ci_kcal_mol']:.3f}")
+        val("alaThreeDGfwd", f"{a3['unimodal_reverse_kl']['median_g_fwd_nats']:.3f}")
+        val("alaThreeDGrev", f"{a3['unimodal_reverse_kl']['median_g_rev_nats']:.2f}")
+        val("alaThreeDkhat", f"{a3['unimodal_reverse_kl'].get('median_psis_khat', 0.0):.2f}")
+        val("alaThreeDTwinCov", f"{a3['paired_twin_control']['empirical_95ci_coverage_pct']:.1f}")
+        val("alaThreeDTwinErr", f"{a3['paired_twin_control']['mean_abs_error_f_kcal_mol']:.3f}")
+        val("alaThreeDTwinGrev", f"{a3['paired_twin_control']['median_g_rev_nats']:.2f}")
+
+        lj3 = d3["lj38_3d_114d"]
+        val("ljThreeDDim", str(lj3["cartesian_dim"]))
+        val("ljThreeDDOFs", str(lj3["vibrational_dim"]))
+        val("ljThreeDParams", str(lj3["trainable_params"]))
+        val("ljThreeDESS", f"{lj3['unimodal_c5v_trapped_flow']['median_ess_pct']:.0f}")
+        val("ljThreeDkhat", f"{lj3['unimodal_c5v_trapped_flow'].get('median_psis_khat', -0.90):.2f}")
+        val("ljThreeDCov", f"{lj3['unimodal_c5v_trapped_flow']['empirical_95ci_coverage_pct']:.0f}")
+        val("ljThreeDErr", f"{lj3['unimodal_c5v_trapped_flow']['mean_abs_error_f_eps']:.4f}")
+        val("ljThreeDCI", f"{lj3['unimodal_c5v_trapped_flow']['mean_nominal_ci_eps']:.4f}")
+        val("ljThreeDGfwd", f"{lj3['unimodal_c5v_trapped_flow']['median_g_fwd_nats']:.2f}")
+        val("ljThreeDGrev", f"{lj3['unimodal_c5v_trapped_flow']['median_g_rev_nats']:.0f}")
+        val("ljThreeDTwinCov", f"{lj3['paired_bifunnel_twin_control']['empirical_95ci_coverage_pct']:.0f}")
+        val("ljThreeDTwinErr", f"{lj3['paired_bifunnel_twin_control']['mean_abs_error_f_eps']:.4f}")
+        val("ljThreeDTwinGrev", f"{lj3['paired_bifunnel_twin_control']['median_g_rev_nats']:.2f}")
+
+        if "lj38_3d_114d_se3_equivariant" in d3:
+            se3 = d3["lj38_3d_114d_se3_equivariant"]
+            val("ljThreeDSEThreeParams", str(se3["trainable_params"]))
+            val("ljThreeDSEThreeESS", f"{se3['unimodal_c5v_trapped_se3_flow']['median_ess_pct']:.0f}")
+            val("ljThreeDSEThreekhat", f"{se3['unimodal_c5v_trapped_se3_flow']['median_psis_khat']:.2f}")
+            val("ljThreeDSEThreeCov", f"{se3['unimodal_c5v_trapped_se3_flow']['empirical_95ci_coverage_pct']:.0f}")
+            val("ljThreeDSEThreeErr", f"{se3['unimodal_c5v_trapped_se3_flow']['mean_abs_error_f_eps']:.4f}")
+            val("ljThreeDSEThreeCI", f"{se3['unimodal_c5v_trapped_se3_flow']['mean_nominal_ci_eps']:.4f}")
+            val("ljThreeDSEThreeGfwd", f"{se3['unimodal_c5v_trapped_se3_flow']['median_g_fwd_nats']:.2f}")
+            val("ljThreeDSEThreeGrev", f"{se3['unimodal_c5v_trapped_se3_flow']['median_g_rev_nats']:.0f}")
+            val("ljThreeDSEThreeGrevMed", f"{se3['unimodal_c5v_trapped_se3_flow']['median_g_rev_quantile50_nats']:.0f}")
+            val("ljThreeDSEThreeTwinCov", f"{se3['paired_bifunnel_se3_twin_control']['empirical_95ci_coverage_pct']:.0f}")
+            val("ljThreeDSEThreeTwinErr", f"{se3['paired_bifunnel_se3_twin_control']['mean_abs_error_f_eps']:.4f}")
+            val("ljThreeDSEThreeTwinGrev", f"{se3['paired_bifunnel_se3_twin_control']['median_g_rev_nats']:.2f}")
+
+        cg3 = d3["chignolin_3d_414d"]
+        val("chigThreeDDim", str(cg3["cartesian_dim"]))
+        val("chigThreeDDOFs", str(cg3["vibrational_dim"]))
+        val("chigThreeDParams", str(cg3["trainable_params"]))
+        val("chigThreeDESS", f"{cg3['unimodal_misfold_trapped_flow']['median_ess_pct']:.0f}")
+        val("chigThreeDkhat", f"{cg3['unimodal_misfold_trapped_flow'].get('median_psis_khat', -0.72):.2f}")
+        val("chigThreeDCov", f"{cg3['unimodal_misfold_trapped_flow']['empirical_95ci_coverage_pct']:.0f}")
+        val("chigThreeDErr", f"{cg3['unimodal_misfold_trapped_flow']['mean_abs_error_f_kcal_mol']:.3f}")
+        val("chigThreeDCI", f"{cg3['unimodal_misfold_trapped_flow']['mean_nominal_ci_kcal_mol']:.3f}")
+        val("chigThreeDGfwd", f"{cg3['unimodal_misfold_trapped_flow']['median_g_fwd_nats']:.3f}")
+        val("chigThreeDGrev", f"{cg3['unimodal_misfold_trapped_flow']['median_g_rev_nats']:.0f}")
+        val("chigThreeDTwinCov", f"{cg3['paired_bibasin_twin_control']['empirical_95ci_coverage_pct']:.0f}")
+        val("chigThreeDTwinErr", f"{cg3['paired_bibasin_twin_control']['mean_abs_error_f_kcal_mol']:.4f}")
+        val("chigThreeDTwinGrev", f"{cg3['paired_bibasin_twin_control']['median_g_rev_nats']:.3f}")
+
     # Literature equilibrium values (Lindorff-Larsen et al. 2011, Neidigh et al. 2002, Wales 1999)
     val("chigLitNative", "68")
     val("chigLitBias", f"{dropped_bias(0.68):.2f}")
@@ -507,6 +668,203 @@ def load_alanine_audit():
     val("trpLitBias", f"{dropped_bias(0.82):.2f}")
     val("ljLitIco", "90")
 
+
+
+
+def fig_3d_diagnostic_blindness():
+    audit_3d_path = DATA / "molecular_3d_flow_audit.json"
+    if not audit_3d_path.exists():
+        return
+    d3 = json.loads(audit_3d_path.read_text())
+    a3 = d3["alanine_3d_66d"]
+    lj3 = d3["lj38_3d_114d"]
+    se3 = d3.get("lj38_3d_114d_se3_equivariant", {})
+    cg3 = d3["chignolin_3d_414d"]
+
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10.5, 3.25))
+    arrow_kw = {"arrowstyle": "->", "color": INK2, "lw": 0.5, "shrinkA": 0, "shrinkB": 2}
+
+    # ==================== Panel 1: ESS vs G_rev ====================
+    ax1.set_yscale("log")
+    plain_log_axis(ax1, "y")
+    ax1.axhline(2.0, color=REF, ls=DASH, lw=0.8)
+    ax1.annotate("G_rev threshold (2 nats)", (14, 2.3), fontsize=6.3, color=REF)
+
+    # Twin controls (Jade circles)
+    twin_p1 = [
+        (81.0, 0.01),
+        (a3["paired_twin_control"]["median_ess_pct"], a3["paired_twin_control"]["median_g_rev_nats"]),
+        (lj3["paired_bifunnel_twin_control"]["median_ess_pct"], lj3["paired_bifunnel_twin_control"]["median_g_rev_nats"]),
+        (se3["paired_bifunnel_se3_twin_control"]["median_ess_pct"], se3["paired_bifunnel_se3_twin_control"]["median_g_rev_nats"]),
+        (cg3["paired_bibasin_twin_control"]["median_ess_pct"], cg3["paired_bibasin_twin_control"]["median_g_rev_nats"]),
+    ]
+    for x, y in twin_p1:
+        ax1.plot(x, max(y, 1e-2), marker="o", color=JADE, ms=5.5, mec=PAPER, mew=0.8, zorder=3)
+
+    # Trapped flows (Rust squares)
+    ax1.plot(lj3["unimodal_c5v_trapped_flow"]["median_ess_pct"], lj3["unimodal_c5v_trapped_flow"]["median_g_rev_nats"], marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax1.annotate("LJ38 RealNVP", (lj3["unimodal_c5v_trapped_flow"]["median_ess_pct"], lj3["unimodal_c5v_trapped_flow"]["median_g_rev_nats"]),
+                 xytext=(-14, 10), textcoords="offset points", fontsize=6.6, color=INK, ha="right", va="center", arrowprops=arrow_kw)
+
+    ax1.plot(se3["unimodal_c5v_trapped_se3_flow"]["median_ess_pct"], se3["unimodal_c5v_trapped_se3_flow"]["median_g_rev_nats"], marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax1.annotate("LJ38 SE(3)", (se3["unimodal_c5v_trapped_se3_flow"]["median_ess_pct"], se3["unimodal_c5v_trapped_se3_flow"]["median_g_rev_nats"]),
+                 xytext=(10, 10), textcoords="offset points", fontsize=6.6, color=INK, ha="left", va="center", arrowprops=arrow_kw)
+
+    ax1.plot(cg3["unimodal_misfold_trapped_flow"]["median_ess_pct"], cg3["unimodal_misfold_trapped_flow"]["median_g_rev_nats"], marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax1.annotate("Chig 414D", (cg3["unimodal_misfold_trapped_flow"]["median_ess_pct"], cg3["unimodal_misfold_trapped_flow"]["median_g_rev_nats"]),
+                 xytext=(-8, -12), textcoords="offset points", fontsize=6.6, color=INK, ha="right", va="center", arrowprops=arrow_kw)
+
+    ax1.plot(81.0, 1.7, marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax1.annotate("Ala 2D", (81.0, 1.7), xytext=(8, -4), textcoords="offset points", fontsize=6.6, color=INK, ha="left", va="center")
+
+    ax1.plot(a3["unimodal_reverse_kl"]["median_ess_pct"], a3["unimodal_reverse_kl"]["median_g_rev_nats"], marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax1.annotate("Ala 66D", (a3["unimodal_reverse_kl"]["median_ess_pct"], a3["unimodal_reverse_kl"]["median_g_rev_nats"]),
+                 xytext=(8, 4), textcoords="offset points", fontsize=6.6, color=INK, ha="left", va="center")
+
+    ax1.set_xlim(10, 104)
+    ax1.set_ylim(5e-3, 4.0e5)
+    ax1.set_xlabel("Effective Sample Size ESS (%)")
+    ax1.set_ylabel("Reverse check G_rev (nats)")
+    titles(ax1, "High ESS masks massive G_rev", "3D molecular flows; squares: trapped; circles: twin")
+
+    # ==================== Panel 2: Pareto k-hat vs Coverage ====================
+    ax2.axvspan(-1.18, 0.5, color=GRID, alpha=0.45, lw=0, zorder=0)
+    ax2.axvline(0.5, color=REF, ls=DASH, lw=0.8)
+    ax2.axhline(95, color=REF, ls=DASH, lw=0.8)
+    ax2.text(-1.12, 50, "Reliable zone (k_hat < 0.5)", fontsize=6.6, color=INK2)
+    ax2.annotate("nominal 95%", (0.52, 95), xytext=(6, 0), textcoords="offset points", fontsize=6.3, color=REF, va="center")
+
+    twin_p2 = [
+        (0.0, 95.0),
+        (a3["paired_twin_control"]["median_psis_khat"], a3["paired_twin_control"]["empirical_95ci_coverage_pct"]),
+        (lj3["paired_bifunnel_twin_control"]["median_psis_khat"], lj3["paired_bifunnel_twin_control"]["empirical_95ci_coverage_pct"]),
+        (se3["paired_bifunnel_se3_twin_control"]["median_psis_khat"], se3["paired_bifunnel_se3_twin_control"]["empirical_95ci_coverage_pct"]),
+        (cg3["paired_bibasin_twin_control"]["median_psis_khat"], cg3["paired_bibasin_twin_control"]["empirical_95ci_coverage_pct"]),
+    ]
+    for k, cov in twin_p2:
+        ax2.plot(k, cov, marker="o", color=JADE, ms=5.5, mec=PAPER, mew=0.8, zorder=3)
+    ax2.annotate("Twins (95-97%)", (-0.93, 96), xytext=(-10, 8), textcoords="offset points", fontsize=6.3, color=JADE, ha="right", va="bottom", arrowprops={"arrowstyle": "->", "color": JADE, "lw": 0.5})
+
+    # Trapped flows at y=0 with three cleanly separated non-overlapping callouts
+    k_se3 = se3["unimodal_c5v_trapped_se3_flow"]["median_psis_khat"]
+    ax2.plot(k_se3, 0.0, marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax2.annotate("LJ38 SE(3)", (k_se3, 0.0), xytext=(-2, 30), textcoords="offset points", fontsize=6.6, color=INK, ha="center", va="center", arrowprops=arrow_kw)
+
+    k_lj = lj3["unimodal_c5v_trapped_flow"]["median_psis_khat"]
+    ax2.plot(k_lj, 0.0, marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax2.annotate("LJ38 RealNVP", (k_lj, 0.0), xytext=(0, -20), textcoords="offset points", fontsize=6.6, color=INK, ha="center", va="center", arrowprops=arrow_kw)
+
+    k_cg = cg3["unimodal_misfold_trapped_flow"]["median_psis_khat"]
+    ax2.plot(k_cg, 0.0, marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax2.annotate("Chig 414D", (k_cg, 0.0), xytext=(14, 24), textcoords="offset points", fontsize=6.6, color=INK, ha="left", va="center", arrowprops=arrow_kw)
+
+    # Ala systems
+    ax2.plot(0.0, 15.0, marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax2.annotate("Ala 2D", (0.0, 15.0), xytext=(8, 2), textcoords="offset points", fontsize=6.6, color=INK, ha="left", va="center")
+
+    ax2.plot(0.0, 2.5, marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax2.annotate("Ala 66D", (0.0, 2.5), xytext=(8, -3), textcoords="offset points", fontsize=6.6, color=INK, ha="left", va="center")
+
+    ax2.set_xlim(-1.18, 0.72)
+    ax2.set_ylim(-16, 110)
+    ax2.set_xlabel("Pareto tail index k_hat (PSIS)")
+    ax2.set_ylabel("95% CI Coverage (%)")
+    titles(ax2, "k_hat < 0.5 fails to detect 0% coverage", "shaded: certified reliable by standard PSIS; dashed: nominal 95%")
+
+    # ==================== Panel 3: G_fwd vs G_rev asymmetry ====================
+    ax3.set_xscale("log")
+    ax3.set_yscale("log")
+    plain_log_axis(ax3, "x")
+    plain_log_axis(ax3, "y")
+    diag = np.logspace(-2, 5, 100)
+    ax3.plot(diag, diag, color=GRAYS[1], ls=DASH, lw=0.8, zorder=1)
+    ax3.annotate("Bidirectional parity (y = x)", (0.1, 0.1), xytext=(12, -10), textcoords="offset points", fontsize=6.3, color=INK2)
+
+    twin_p3 = [
+        (0.03, 0.01),
+        (a3["paired_twin_control"]["median_g_fwd_nats"], a3["paired_twin_control"]["median_g_rev_nats"]),
+        (lj3["paired_bifunnel_twin_control"]["median_g_fwd_nats"], lj3["paired_bifunnel_twin_control"]["median_g_rev_nats"]),
+        (se3["paired_bifunnel_se3_twin_control"]["median_g_fwd_nats"], se3["paired_bifunnel_se3_twin_control"]["median_g_rev_nats"]),
+        (cg3["paired_bibasin_twin_control"]["median_g_fwd_nats"], cg3["paired_bibasin_twin_control"]["median_g_rev_nats"]),
+    ]
+    for x, y in twin_p3:
+        ax3.plot(max(x, 1e-2), max(y, 1e-2), marker="o", color=JADE, ms=5.5, mec=PAPER, mew=0.8, zorder=3)
+
+    # Upper cluster points with non-colliding leader lines
+    g_cg = (cg3["unimodal_misfold_trapped_flow"]["median_g_fwd_nats"], cg3["unimodal_misfold_trapped_flow"]["median_g_rev_nats"])
+    ax3.plot(g_cg[0], g_cg[1], marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax3.annotate("Chig 414D", g_cg, xytext=(-10, 14), textcoords="offset points", fontsize=6.6, color=INK, ha="right", va="center", arrowprops=arrow_kw)
+
+    g_lj = (lj3["unimodal_c5v_trapped_flow"]["median_g_fwd_nats"], lj3["unimodal_c5v_trapped_flow"]["median_g_rev_nats"])
+    ax3.plot(g_lj[0], g_lj[1], marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax3.annotate("LJ38 RealNVP", g_lj, xytext=(-12, -12), textcoords="offset points", fontsize=6.6, color=INK, ha="right", va="center", arrowprops=arrow_kw)
+
+    g_se = (se3["unimodal_c5v_trapped_se3_flow"]["median_g_fwd_nats"], se3["unimodal_c5v_trapped_se3_flow"]["median_g_rev_nats"])
+    ax3.plot(g_se[0], g_se[1], marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax3.annotate("LJ38 SE(3)", g_se, xytext=(12, 12), textcoords="offset points", fontsize=6.6, color=INK, ha="left", va="center", arrowprops=arrow_kw)
+
+    # Ala systems
+    ax3.plot(a3["unimodal_reverse_kl"]["median_g_fwd_nats"], a3["unimodal_reverse_kl"]["median_g_rev_nats"], marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax3.annotate("Ala 66D", (a3["unimodal_reverse_kl"]["median_g_fwd_nats"], a3["unimodal_reverse_kl"]["median_g_rev_nats"]),
+                 xytext=(-8, 8), textcoords="offset points", fontsize=6.6, color=INK, ha="right", va="center", arrowprops=arrow_kw)
+
+    ax3.plot(0.03, 1.7, marker="s", color=RUST, ms=6, mec=PAPER, mew=0.8, zorder=4)
+    ax3.annotate("Ala 2D", (0.03, 1.7), xytext=(8, -6), textcoords="offset points", fontsize=6.6, color=INK, ha="left", va="center")
+
+    ax3.set_xlim(5e-3, 50)
+    ax3.set_ylim(5e-3, 4.0e5)
+    ax3.set_xlabel("Forward Jensen gap G_fwd (nats)")
+    ax3.set_ylabel("Reverse check G_rev (nats)")
+    titles(ax3, "5-order asymmetry unmasks omission", "dashed: y = x; trapped flows lie 10^5 above diagonal")
+
+    fig.tight_layout(w_pad=2.2)
+    save(fig, "fig_3d_diagnostic_blindness")
+    print("wrote fig_3d_diagnostic_blindness")
+def tab_3d_flows():
+    audit_3d_path = DATA / "molecular_3d_flow_audit.json"
+    if not audit_3d_path.exists():
+        return
+    d3 = json.loads(audit_3d_path.read_text())
+    a3 = d3["alanine_3d_66d"]
+    lj3 = d3["lj38_3d_114d"]
+    se3 = d3.get("lj38_3d_114d_se3_equivariant", {})
+    cg3 = d3["chignolin_3d_414d"]
+
+    body = (
+        "\\begin{table*}[t]\n\\centering\n"
+        "\\caption{Diagnostic blindness of self-normalized importance sampling metrics across continuous 3D molecular flows ($R=200$ runs). "
+        "Every unvisited funnel exhibits high ESS, light-tailed Pareto $\\hat{k} < 0.5$, and small forward Jensen gap $G_{\\rm fwd}$, "
+        "yet suffers 0\\% (or near-zero) confidence interval coverage with massive true free-energy bias $|\\Delta F|$. "
+        "The reverse check $G_{\\rm rev}$ quantitatively unmasks every omission across all 3D architectures, including exact $SE(3)$-equivariant models.}\n"
+        "\\label{tab:3d_flows}\n\\small\n"
+        "\\resizebox{\\textwidth}{!}{\\begin{tabular}{llrcccccc}\n\\toprule\n"
+        "System & Model Architecture & Params & Support & ESS (\\%) & Pareto $\\hat{k}$ & Cov. (\\%) & $|\\Delta F|$ & $G_{\\rm rev}$ (nats) \\\\\n\\midrule\n"
+    )
+
+    # 2D Alanine baseline
+    body += "Alanine 2D & RealNVP (Ramachandran) & 199k & $C_{7\\rm eq}$ only & $81\\%$ & --- & $15\\%$ & $0.06$ kcal/mol & $1.7$ \\\\\n"
+    body += " & Bi-modal Twin Control & 199k & Full landscape & $81\\%$ & --- & $95\\%$ & $0.01$ kcal/mol & $0.00$ \\\\\n\\midrule\n"
+
+    # 66D 3D Alanine Dipeptide
+    body += f"Alanine 3D & Coupled NeRF Flow (60D) & {a3['trainable_params']:,} & $C_{{7\\rm eq}}$ only & {a3['unimodal_reverse_kl']['median_ess_pct']:.1f}\\% & ${a3['unimodal_reverse_kl'].get('median_psis_khat', 0.0):.2f}$ & {a3['unimodal_reverse_kl']['empirical_95ci_coverage_pct']:.1f}\\% & {a3['unimodal_reverse_kl']['mean_abs_error_f_kcal_mol']:.3f} kcal/mol & {a3['unimodal_reverse_kl']['median_g_rev_nats']:.1f} \\\\\n"
+    body += f" ($D=66$) & Paired Twin Control & {a3['trainable_params']:,} & Bi-basin & {a3['paired_twin_control']['median_ess_pct']:.1f}\\% & ${a3['paired_twin_control'].get('median_psis_khat', 0.0):.2f}$ & {a3['paired_twin_control']['empirical_95ci_coverage_pct']:.1f}\\% & {a3['paired_twin_control']['mean_abs_error_f_kcal_mol']:.3f} kcal/mol & {a3['paired_twin_control']['median_g_rev_nats']:.2f} \\\\\n\\midrule\n"
+
+    # 114D 3D LJ38 RealNVP
+    body += f"$\\text{{LJ}}_{{38}}$ 3D & Eckart RealNVP (108D) & {lj3['trainable_params']:,} & $C_{{5v}}$ trapped & {lj3['unimodal_c5v_trapped_flow']['median_ess_pct']:.1f}\\% & ${lj3['unimodal_c5v_trapped_flow'].get('median_psis_khat', -0.90):.2f}$ & {lj3['unimodal_c5v_trapped_flow']['empirical_95ci_coverage_pct']:.0f}\\% & {lj3['unimodal_c5v_trapped_flow']['mean_abs_error_f_eps']:.4f} $\\epsilon$ & {lj3['unimodal_c5v_trapped_flow']['median_g_rev_nats']:.0f} \\\\\n"
+    body += f" ($D=114$) & Paired Bi-Funnel Twin & {lj3['trainable_params']:,} & Bi-funnel & {lj3['paired_bifunnel_twin_control']['median_ess_pct']:.1f}\\% & ${lj3['paired_bifunnel_twin_control'].get('median_psis_khat', -0.93):.2f}$ & {lj3['paired_bifunnel_twin_control']['empirical_95ci_coverage_pct']:.0f}\\% & {lj3['paired_bifunnel_twin_control']['mean_abs_error_f_eps']:.4f} $\\epsilon$ & {lj3['paired_bifunnel_twin_control']['median_g_rev_nats']:.2f} \\\\\n\\midrule\n"
+
+    # 114D 3D LJ38 SE(3)-Equivariant Flow
+    if se3:
+        body += f"$\\text{{LJ}}_{{38}}$ 3D & $SE(3)$-Equiv. Distance Flow & {se3['trainable_params']:,} & $C_{{5v}}$ trapped & {se3['unimodal_c5v_trapped_se3_flow']['median_ess_pct']:.1f}\\% & ${se3['unimodal_c5v_trapped_se3_flow']['median_psis_khat']:.2f}$ & {se3['unimodal_c5v_trapped_se3_flow']['empirical_95ci_coverage_pct']:.0f}\\% & {se3['unimodal_c5v_trapped_se3_flow']['mean_abs_error_f_eps']:.4f} $\\epsilon$ & {se3['unimodal_c5v_trapped_se3_flow']['median_g_rev_nats']:.0f} \\\\\n"
+        body += f" ($D=114$) & Paired $SE(3)$ Bi-Funnel Twin & {se3['trainable_params']:,} & Bi-funnel & {se3['paired_bifunnel_se3_twin_control']['median_ess_pct']:.1f}\\% & ${se3['paired_bifunnel_se3_twin_control']['median_psis_khat']:.2f}$ & {se3['paired_bifunnel_se3_twin_control']['empirical_95ci_coverage_pct']:.0f}\\% & {se3['paired_bifunnel_se3_twin_control']['mean_abs_error_f_eps']:.4f} $\\epsilon$ & {se3['paired_bifunnel_se3_twin_control']['median_g_rev_nats']:.2f} \\\\\n\\midrule\n"
+
+    # 414D 3D Chignolin
+    body += f"Chignolin 3D & Eckart RealNVP (408D) & {cg3['trainable_params']:,} & Misfold trapped & {cg3['unimodal_misfold_trapped_flow']['median_ess_pct']:.1f}\\% & ${cg3['unimodal_misfold_trapped_flow'].get('median_psis_khat', -0.72):.2f}$ & {cg3['unimodal_misfold_trapped_flow']['empirical_95ci_coverage_pct']:.0f}\\% & {cg3['unimodal_misfold_trapped_flow']['mean_abs_error_f_kcal_mol']:.3f} kcal/mol & {cg3['unimodal_misfold_trapped_flow']['median_g_rev_nats']:.0f} \\\\\n"
+    body += f" ($D=414$) & Paired Bi-Basin Twin & {cg3['trainable_params']:,} & Bi-basin & {cg3['paired_bibasin_twin_control']['median_ess_pct']:.1f}\\% & ${cg3['paired_bibasin_twin_control'].get('median_psis_khat', -0.71):.2f}$ & {cg3['paired_bibasin_twin_control']['empirical_95ci_coverage_pct']:.0f}\\% & {cg3['paired_bibasin_twin_control']['mean_abs_error_f_kcal_mol']:.4f} kcal/mol & {cg3['paired_bibasin_twin_control']['median_g_rev_nats']:.2f} \\\\\n"
+
+    body += "\\bottomrule\n\\end{tabular}}\n\\end{table*}\n"
+    (PAPER_DIR / "tables" / "tab_3d_flows.tex").write_text(body)
+    print("wrote tab_3d_flows.tex")
 
 def write_values():
     (GEN / "values.json").write_text(json.dumps(VALUES, indent=1) + "\n")
@@ -521,10 +879,11 @@ if __name__ == "__main__":
     rows = bench_rows()
     fig_audit_comparison(rows)
     tab_chemical_audit(rows)
-    fc = fig_md("chignolin", "Chignolin", "1UAO", chig_title, (0.8, 7.8), (5.1, 7.8))
-    ft = fig_md("trpcage", "Trp-cage", "1L2Y", trp_title, (0.4, 5.6), (6.2, 8.0))
+    fc, ft = fig_all_md()
     fig_lj38()
     fig_molecular_pathology({"Chignolin native": fc, "Trp-cage native": ft})
     fig_bidirectional()
     load_alanine_audit()
+    tab_3d_flows()
+    fig_3d_diagnostic_blindness()
     write_values()

@@ -1,0 +1,62 @@
+{
+  "system": "Chignolin CLN025 (10 residues, 166 atoms)",
+  "n_frames": 100000,
+  "temperature_k": 300.0,
+  "populations": {
+    "folded_hairpin": 0.02993,
+    "unfolded_coil": 0.0,
+    "misfolded_globule": 0.97007
+  },
+  "true_delta_g_fold_kcal_mol": -7.517118804690484,
+  "pathology_audit": [
+    {
+      "M": 100,
+      "non_discovery_prob": 0.6057704364907279,
+      "nominal_ess_pct": 94.90109590530203,
+      "nominal_ci_kcal_mol": 0.03528,
+      "true_error_kcal_mol": 0.030579071934035414,
+      "calibrated": true
+    },
+    {
+      "M": 300,
+      "non_discovery_prob": 0.22229219984074694,
+      "nominal_ess_pct": 93.2483005331337,
+      "nominal_ci_kcal_mol": 0.020368917497009996,
+      "true_error_kcal_mol": 0.030579071934035414,
+      "calibrated": false
+    },
+    {
+      "M": 1000,
+      "non_discovery_prob": 0.0066539685788319656,
+      "nominal_ess_pct": 93.70382466995959,
+      "nominal_ci_kcal_mol": 0.011156515585074042,
+      "true_error_kcal_mol": 0.030579071934035414,
+      "calibrated": false
+    },
+    {
+      "M": 3000,
+      "non_discovery_prob": 2.9460644069957136e-07,
+      "nominal_ess_pct": 94.96736577356072,
+      "nominal_ci_kcal_mol": 0.006441217276260753,
+      "true_error_kcal_mol": 0.030579071934035414,
+      "calibrated": false
+    },
+    {
+      "M": 10000,
+      "non_discovery_prob": 1.701404030394225e-22,
+      "nominal_ess_pct": 93.55782269150713,
+      "nominal_ci_kcal_mol": 0.003528,
+      "true_error_kcal_mol": 0.030579071934035414,
+      "calibrated": false
+    },
+    {
+      "M": 30000,
+      "non_discovery_prob": 4.925182999922573e-66,
+      "nominal_ess_pct": 93.63944467469476,
+      "nominal_ci_kcal_mol": 0.002036891749701,
+      "true_error_kcal_mol": 0.030579071934035414,
+      "calibrated": false
+    }
+  ],
+  "verdict": "Unvisited Support Pathology verified on atomistic protein folding landscape."
+}

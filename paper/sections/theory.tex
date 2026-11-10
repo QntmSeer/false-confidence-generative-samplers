@@ -1,4 +1,4 @@
-Let $\Omega$ be the configuration space, discrete or continuous, $U$ the potential energy and $p(x)=e^{-\beta U(x)}/Z$ the Boltzmann law, with free energy $F=-\beta^{-1}\log Z$. A learned proposal $q_\theta$ is trained to approximate $p$, for example by minimizing $\mathrm{KL}(q_\theta\,\|\,p)$ \citep{noe2019boltzmann}. Given draws $x_1,\dots,x_M\sim q_\theta$, the importance-sampling estimate is
+Let $(\Omega, \mathcal{F}, \mu)$ be a configuration space endowed with a dominating reference measure $\mu$ (Lebesgue measure for continuous coordinates, counting measure for discrete spins). Let $U: \Omega \to \mathbb{R}$ be a measurable potential energy and $p(x)=e^{-\beta U(x)}/Z$ the Boltzmann probability density with respect to $\mu$, with partition function $Z = \int_\Omega e^{-\beta U(x)}\,d\mu(x)$ and free energy $F=-\beta^{-1}\log Z$. A learned proposal density $q_\theta$ (with $q_\theta(x) > 0$ for $\mu$-almost all $x$ where $p(x) > 0$) is trained to approximate $p$, for example by minimizing $\mathrm{KL}(q_\theta\,\|\,p)$ \citep{noe2019boltzmann}. Given i.i.d.\ draws $x_1,\dots,x_M\sim q_\theta$, the importance-sampling estimate is
 \begin{equation}
 w_k=\frac{e^{-\beta U(x_k)}}{q_\theta(x_k)},\qquad \hat Z_M=\frac1M\sum_{k=1}^M w_k,\qquad \hat F_M=-\beta^{-1}\log\hat Z_M,
 \end{equation}
@@ -10,21 +10,21 @@ and a nominal 95\% interval is $\hat F_M\pm1.96\,\beta^{-1}\hat\sigma_w/(\sqrt M
 
 \begin{proposition}[Diagnostic blindness under unvisited support]
 \label{prop:unvisited}
-Let $\Omega=A\cup B$ with $A\cap B=\emptyset$, $p(B)=\alpha>0$ and $q_\theta(B)=\epsilon$. Let $\mathcal E$ be the event that no draw lands in $B$. Then
+Let $A, B \in \mathcal{F}$ form a measurable partition of $\Omega$ ($A \cap B = \emptyset$, $A \cup B = \Omega$) with $p(B)=\alpha \in (0, 1)$ and $q_\theta(B)=\epsilon \in [0, 1)$. Let $\mathcal E$ be the event that no draw lands in $B$ (all $M$ draws land in $A$). Then
 \begin{enumerate}
 \item $\mathbb P(\mathcal E)=(1-\epsilon)^M$, which tends to 1 as $\epsilon\to0$ for fixed $M$;
-\item conditioned on $\mathcal E$, the draws are i.i.d.\ from $q_A=q_\theta(\cdot)/(1-\epsilon)$ restricted to $A$;
-\item conditioned on $\mathcal E$, $\E[\hat Z_M\mid\mathcal E]=(1-\alpha)Z/(1-\epsilon)$, so the estimate asymptotically targets $F-\beta^{-1}\log\frac{1-\alpha}{1-\epsilon}$, which approaches $F-\beta^{-1}\log(1-\alpha)$ for small $\epsilon$;
-\item conditioned on $\mathcal E$, the joint law of the normalized weights $w_k/\sum_jw_j$, and hence of $\ESS_M$ and of the relative interval width $\hat\sigma_w/\hat Z_M$, does not depend on $\alpha$, provided $U$ on $A$ is held fixed.
+\item conditioned on $\mathcal E$, the draws are conditionally i.i.d.\ with density $q_A(x)=q_\theta(x)\mathbf{1}_A(x)/(1-\epsilon)$;
+\item conditioned on $\mathcal E$, $\E[\hat Z_M\mid\mathcal E]=(1-\alpha)Z/(1-\epsilon)$, and by continuous mapping $\hat F_M \xrightarrow{p} F-\beta^{-1}\log\frac{1-\alpha}{1-\epsilon}$ as $M \to \infty$, which approaches $F-\beta^{-1}\log(1-\alpha)$ when $\epsilon \ll \alpha$;
+\item conditioned on $\mathcal E$, the joint law of the normalized weights $\tilde{w}_k = w_k/\sum_jw_j$, and hence of $\ESS_M$ and of the relative interval width $\hat\sigma_w/\hat Z_M$, depends on $p$ and $q_\theta$ solely through their conditional restrictions on $A$, and is strictly invariant to $\alpha$ and to the potential landscape on $B$, provided $U$ on $A$ is held fixed.
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}
-The draws are independent, so $\mathbb P(\mathcal E)=\prod_k\mathbb P(x_k\in A)=(1-\epsilon)^M$, and conditioned on $\mathcal E$ each draw has law $q_\theta(\cdot\mid A)=q_A$, independently. For $x\in A$,
+Because the draws $x_k$ are i.i.d., $\mathbb P(\mathcal E)=\prod_{k=1}^M \mathbb P(x_k\in A)=(1-\epsilon)^M$. Conditioned on the product event $\mathcal E$, each draw has conditional density $q_\theta(x\mid x \in A)=q_A(x)$ independently. For $x\in A$,
 \begin{equation}
-\E_{q_A}[w]=\int_A\frac{e^{-\beta U(x)}}{q_\theta(x)}\,\frac{q_\theta(x)}{1-\epsilon}\,dx=\frac{Z_A}{1-\epsilon},\qquad Z_A=\int_Ae^{-\beta U(x)}dx=(1-\alpha)Z,
+\E_{q_A}[w]=\int_A\frac{e^{-\beta U(x)}}{q_\theta(x)}\,\frac{q_\theta(x)}{1-\epsilon}\,d\mu(x)=\frac{Z_A}{1-\epsilon},\qquad Z_A=\int_Ae^{-\beta U(x)}d\mu(x)=(1-\alpha)Z.
 \end{equation}
-which gives item 3. For item 4, write $e^{-\beta U(x)}=Z_A\,p(x\mid A)$ on $A$. Then $w_k=c\,p(x_k\mid A)/q_A(x_k)$ with $c=Z_A/(1-\epsilon)$ a constant. The normalized weights do not depend on $c$, and $p(\cdot\mid A)$ and $q_A$ do not depend on what happens in $B$. Changing $\alpha$ while keeping $U$ on $A$ fixed only changes $c$.
+By the weak law of large numbers conditioned on $\mathcal{E}$, $\hat{Z}_M \xrightarrow{p} (1-\alpha)Z/(1-\epsilon)$. Since $g(z) = -\beta^{-1}\log z$ is continuous on $(0, \infty)$, the continuous mapping theorem yields $\hat{F}_M \xrightarrow{p} F - \beta^{-1}\log\frac{1-\alpha}{1-\epsilon}$, proving item 3. For item 4, write $e^{-\beta U(x)}=Z_A\,p(x\mid A)$ for $x \in A$. Then $w_k=c\,p(x_k\mid A)/q_A(x_k)$ where $c=Z_A/(1-\epsilon)$ is a positive scaling constant. The normalized weights $\tilde{w}_k = w_k/\sum_j w_j = \frac{p(x_k\mid A)/q_A(x_k)}{\sum_j p(x_j\mid A)/q_A(x_j)}$ cancel $c$ identically, so their joint distribution depends on $p$ and $q_\theta$ solely through their restrictions to $A$. Changing $\alpha$ or altering $U$ on $B$ while preserving $U|_A$ only shifts $c$, leaving the joint law of the normalized weights, $\ESS_M$, and $\hat\sigma_w/\hat Z_M$ strictly unchanged.
 \end{proof}
 
 \paragraph{Diagnostic consequence: coverage collapse.}

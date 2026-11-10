@@ -1,6 +1,6 @@
 # False Confidence in Generative Samplers: Exact Physical References Expose Hidden Errors and Diagnostic Blindness
 
-[![ChemRxiv](https://img.shields.io/badge/ChemRxiv-10.26434%2Fchemrxiv.15011779%2Fv1-blue.svg)](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15011779/v1)
+[![ChemRxiv](https://img.shields.io/badge/ChemRxiv-10.26434%2Fchemrxiv.15011779%2Fv2-blue.svg)](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15011779/v2)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-orange.svg)](https://pytorch.org/)
@@ -8,7 +8,7 @@
 **Official repository** for the manuscript:  
 *False Confidence in Generative Samplers: Exact Physical References Expose Hidden Errors and Diagnostic Blindness*  
 **Author:** Karthik Gangadharaiah (`Independent researcher (KoWerk), Amsterdam, The Netherlands`)  
-**Preprint:** [ChemRxiv: 10.26434/chemrxiv.15011779/v1](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15011779/v1)  
+**Preprint:** [ChemRxiv: 10.26434/chemrxiv.15011779/v2](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15011779/v2)  
 **Journal Status:** Under Review at *Nature Machine Intelligence* (`NATMACHINTELL-A26116821`)  
 **Manuscript PDF:** [`paper/main.pdf`](paper/main.pdf) (12 pages, TMLR format, de-anonymized preprint)
 
@@ -118,8 +118,8 @@ If you use this benchmark, code, or diagnostic check in your research, please ci
   title     = {False Confidence in Generative Samplers: Exact Physical References Expose Hidden Errors and Diagnostic Blindness},
   journal   = {ChemRxiv},
   year      = {2026},
-  doi       = {10.26434/chemrxiv.15011779/v1},
-  url       = {https://chemrxiv.org/doi/full/10.26434/chemrxiv.15011779/v1}
+  doi       = {10.26434/chemrxiv.15011779/v2},
+  url       = {https://chemrxiv.org/doi/full/10.26434/chemrxiv.15011779/v2}
 }
 ```
 

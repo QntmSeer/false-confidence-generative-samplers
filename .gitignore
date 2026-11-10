@@ -19,6 +19,13 @@ paper/*.log
 paper/*.out
 paper/*.synctex.gz
 
+# Private drafts & non-preprint documents
+treatise/
+paper/main_anonymous.*
+
+# Scratch
+scratch/
+
 # OS and Editor
 .DS_Store
 Thumbs.db
