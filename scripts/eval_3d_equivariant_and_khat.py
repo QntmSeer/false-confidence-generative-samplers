@@ -50,7 +50,7 @@ def estimate_psis_khat(log_weights: np.ndarray) -> float:
     n = len(lw)
     m_tail = min(int(n // 5), int(np.ceil(3.0 * np.sqrt(n))))
     if m_tail < 5:
-        return 0.0
+        return float("nan")
     lw_sorted = np.sort(lw - np.max(lw))
     w_sorted = np.exp(lw_sorted)
     cutoff = w_sorted[n - m_tail - 1]
@@ -58,7 +58,7 @@ def estimate_psis_khat(log_weights: np.ndarray) -> float:
     tail = tail[tail > 1e-15]
     m = len(tail)
     if m < 5:
-        return 0.0
+        return float("nan")
 
     # Zhang-Stephens empirical Bayes grid over b in Generalized Pareto Distribution
     x_star = tail[-1]
@@ -67,13 +67,13 @@ def estimate_psis_khat(log_weights: np.ndarray) -> float:
     b_grid = 1.0 / x_star + (1.0 - np.sqrt(m / (idx - 0.5))) / (3.0 * tail[int(m // 4)])
     b_grid = b_grid[b_grid * x_star < 1.0 - 1e-12]
     if len(b_grid) == 0:
-        return 0.0
+        return float("nan")
 
     log_one_minus_bx = np.log1p(-np.outer(b_grid, tail))  # (G, m)
     k_grid = -np.mean(log_one_minus_bx, axis=1)  # (G,)
     valid = k_grid > -1.0
     if not np.any(valid):
-        return 0.0
+        return float("nan")
     b_grid = b_grid[valid]
     k_grid = k_grid[valid]
     # Profile log-likelihood L(b) = m * (log(b / k) + k - 1)
@@ -944,9 +944,9 @@ with torch.no_grad():
 cov_diff_se3 = np.array([t["cov"] - u["cov"] for u, t in zip(se3_uni_runs, se3_tw_runs)])
 p_val_se3 = float(np.mean(cov_diff_se3[boot_idx].mean(axis=1) <= 0.0))
 
-# Also add PSIS k-hat to the 108D RealNVP entry in payload
-payload["lj38_3d_114d"]["unimodal_c5v_trapped_flow"]["median_psis_khat"] = float(np.median([r["k_hat"] for r in se3_uni_runs]) * 0.98)
-payload["lj38_3d_114d"]["paired_bifunnel_twin_control"]["median_psis_khat"] = float(np.median([r["k_hat"] for r in se3_tw_runs]) * 0.99)
+# v3: the 108D RealNVP k-hat is not computed here (v2 copied the SE(3) value scaled by 0.98/0.99).
+payload["lj38_3d_114d"]["unimodal_c5v_trapped_flow"]["median_psis_khat"] = None
+payload["lj38_3d_114d"]["paired_bifunnel_twin_control"]["median_psis_khat"] = None
 
 payload["invariants_firewall4"]["se3_114d_bijectivity_max_err"] = se3_inv_err
 payload["invariants_firewall4"]["se3_114d_log_det_inv_err"] = se3_ld_err
@@ -996,13 +996,11 @@ print(f"  [114D SE(3) Twin]     ESS: {payload['lj38_3d_114d_se3_equivariant']['p
 # =============================================================================
 
 print("\n[3/3] Computing Pareto k-hat on 414D Chignolin Importance Weights...")
-# Since Chignolin 408D flow has ESS = 83.3% (G_fwd = 0.091 nats), compute exact k-hat from log-weights of matching variance
-rng_chig = np.random.default_rng(42)
-khats_chig_uni = [estimate_psis_khat(rng_chig.normal(0.0, np.sqrt(2.0 * 0.091), size=5000)) for _ in range(R_RUNS)]
-khats_chig_tw = [estimate_psis_khat(rng_chig.normal(0.0, np.sqrt(2.0 * 0.092), size=5000)) for _ in range(R_RUNS)]
-payload["chignolin_3d_414d"]["unimodal_misfold_trapped_flow"]["median_psis_khat"] = float(np.median(khats_chig_uni))
-payload["chignolin_3d_414d"]["paired_bibasin_twin_control"]["median_psis_khat"] = float(np.median(khats_chig_tw))
-print(f"  [414D Chignolin] Unimodal median Pareto k-hat: {payload['chignolin_3d_414d']['unimodal_misfold_trapped_flow']['median_psis_khat']:.3f} (< 0.5 threshold) | Twin k-hat: {payload['chignolin_3d_414d']['paired_bibasin_twin_control']['median_psis_khat']:.3f}")
+# v3: k-hat needs the flow's own log-weights, which this script does not have for the 408D model.
+# v2 computed it on synthetic normal draws of matching variance; that is withdrawn.
+payload["chignolin_3d_414d"]["unimodal_misfold_trapped_flow"]["median_psis_khat"] = None
+payload["chignolin_3d_414d"]["paired_bibasin_twin_control"]["median_psis_khat"] = None
+print("  [414D Chignolin] Pareto k-hat not computed (needs flow log-weights).")
 
 JSON_PATH.write_text(json.dumps(payload, indent=2) + "\n")
 print(f"\n[SUCCESS] Supplementary L4 audit finished in {time.time() - t0:.1f}s -> {JSON_PATH}")

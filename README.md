@@ -9,14 +9,14 @@
 *False Confidence in Generative Samplers: Exact Physical References Expose Hidden Errors and Diagnostic Blindness*  
 **Author:** Karthik Gangadharaiah (`Independent researcher (KoWerk), Amsterdam, The Netherlands`)  
 **Preprint:** [ChemRxiv: 10.26434/chemrxiv.15011779/v2](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15011779/v2)  
-**Journal Status:** Under Review at *Nature Machine Intelligence* (`NATMACHINTELL-A26116821`)  
-**Manuscript PDF:** [`paper/main.pdf`](paper/main.pdf) (12 pages, TMLR format, de-anonymized preprint)
+**Manuscript PDF:** [`paper/main.pdf`](paper/main.pdf) (v3, 14 pages, TMLR format, de-anonymized preprint)  
+**Changes from v2:** [`CHANGES_v3.md`](CHANGES_v3.md)
 
 ---
 
 ## Overview
 
-Learned samplers (normalizing flows, discrete diffusion, GFlowNets) are increasingly proposed for equilibrium Boltzmann sampling and free-energy estimation in chemistry and materials science. In practice, these models are evaluated almost exclusively by self-normalized diagnostics—principally the **Effective Sample Size (ESS)** and nominal delta-method confidence intervals.
+Learned samplers (normalizing flows, discrete diffusion, GFlowNets) are increasingly proposed for equilibrium Boltzmann sampling and free-energy estimation in chemistry and materials science. In practice, these models are evaluated almost exclusively by self-normalized diagnostics, principally the **Effective Sample Size (ESS)** and nominal delta-method confidence intervals.
 
 This repository provides the mathematical proof and empirical code demonstrating that **self-normalized diagnostics suffer from a complete blind spot for unvisited support**:
 
@@ -33,16 +33,16 @@ This repository provides the mathematical proof and empirical code demonstrating
                    v                                          v
       True Free Energy: F                      Estimated Free Energy: F_hat
                                                Bias: -k_B T ln(1 - alpha)
-                                               Nominal ESS: > 90% (False Confidence)
-                                               95% CI Coverage: 0% Asymptotic
+                                               Nominal ESS: can stay near 100%
+                                               95% CI Coverage: -> 0% while B is unvisited
 ```
 
 ### Core Contributions
 1. **The Diagnostic Blindness Theorem (Proposition 1)**: Conditioned on failing to propose points in a basin of Boltzmann mass $\alpha$, importance weights are distributed identically to the truncated problem. The free-energy estimate asymptotically targets $F - \beta^{-1}\ln(1-\alpha)$, while normalized weights and $\text{ESS}$ are mathematically invariant to $\alpha$.
 2. **Exact Disordered Benchmark ($n = 24$)**: On solvable Sherrington-Kirkpatrick spin glasses with 1.68 × 10⁷ configurations evaluated without sampling error, discrete diffusion and GFlowNets collapse to **8% and 47% coverage** at $\beta = 2$, while reporting high internal confidence.
-3. **Continuous Molecular Flow Audit**: A RealNVP Boltzmann Generator trained via reverse-KL on 2D Alanine Dipeptide collapses into $C_{7\rm eq}$, proposing 0.000% of points in $C_{7\rm ax}$ ($\alpha = 8.1\%$). Despite reporting **79% internal ESS**, nominal 95% interval coverage collapses to **10%**.
-4. **All-Atom Molecular Dynamics**: 300 ns Amber14SB trajectories of Chignolin and Trp-cage demonstrate that dropped native states incur $0.68$ to $1.02\,$kcal/mol thermodynamic shifts—well exceeding the $0.3\,$kcal/mol lead-optimization threshold.
-5. **The Bidirectional Diagnostic**: A practical cross-audit ($G_{\rm rev}$) evaluating reference configurations against the proposal. On the Alanine Dipeptide flow, while the forward Jensen gap is blind ($0.028\,$nats), $G_{\rm rev}$ registers **11.66 nats** (with $C_{7\rm ax}$ accounting for 88% of the gap), immediately exposing the omission.
+3. **Continuous Flow Audit**: A RealNVP flow trained via reverse-KL on an analytic 2D surrogate of the alanine dipeptide Ramachandran surface collapses into $C_{7\rm eq}$, proposing 0.000% of points in $C_{7\rm ax}$ ($\alpha = 8.1\%$). Despite reporting **79% internal ESS**, nominal 95% interval coverage collapses to **10%**.
+4. **All-Atom Molecular Dynamics**: Amber14SB/OBC2 trajectories of chignolin (1 µs) and Trp-cage (300 ns) size the effect: omitting the Trp-cage native basin (50% of the run) would shift the free energy by about 0.42 kcal/mol, above a 0.3 kcal/mol target. The trajectories are not equilibrated, and the literature populations quoted in the paper are unverified.
+5. **The Bidirectional Diagnostic**: A practical cross-audit ($G_{\rm rev}$) evaluating reference configurations against the proposal. On the Alanine Dipeptide flow, while the forward Jensen gap is blind ($0.028\,$nats), $G_{\rm rev}$ registers **11.66 nats**. On model landscapes up to 414 dimensions (two analytic surrogates and the real LJ38 potential restricted to two basins) it behaves the same way, but one control with the correct support also gives a large gap, so a large $G_{\rm rev}$ is not specific to a missing basin.
 
 ---
 
@@ -50,22 +50,29 @@ This repository provides the mathematical proof and empirical code demonstrating
 
 ```
 ├── paper/                      # Complete LaTeX source & compiled preprint
-│   ├── main.tex                # Root manuscript file (12 pages, TMLR format)
-│   ├── main.pdf                # Compiled publication preprint (matches ChemRxiv)
-│   ├── sections/               # Modular section files (intro, theory, benchmarks...)
-│   ├── tables/                 # Benchmark audit tables (tab_chemical_audit.tex)
-│   ├── figures/                # Vector PDFs and PNGs for Figures 1 to 6
-│   └── generated/              # LaTeX values.tex & values.json (100% data-derived)
+│   ├── main.tex                # Root manuscript file (14 pages, TMLR format)
+│   ├── main.pdf                # Compiled preprint (v3)
+│   ├── sections/               # Section files (intro, theory, benchmarks, ...)
+│   ├── tables/                 # Generated tables (tab_chemical_audit.tex, tab_3d_flows.tex)
+│   ├── figures/                # Vector PDFs and PNGs for Figures 1 to 7
+│   └── generated/              # values.tex & values.json: every data-derived number in the text
 ├── data/                       # Stored simulation & benchmark artifacts
-│   ├── summary_sk24.json       # Exact n=24 spin-glass test-split ledger (70 records)
-│   ├── alanine_flow_audit.json # 100-run RealNVP flow evaluation metrics
-│   ├── chignolin_overnight_metrics.npz # 30,000-frame RMSD and Rg metrics (300 ns)
-│   ├── trpcage_overnight_metrics.npz   # 30,000-frame RMSD and Rg metrics (300 ns)
-│   └── lj38_inversion_results.json     # Lennard-Jones LJ38 Langevin sweep
+│   ├── summary_sk24.json       # Exact n=24 spin-glass test-split summary (70 records)
+│   ├── alanine_flow_audit.json # 2D alanine-surrogate RealNVP flow, 100 runs
+│   ├── molecular_3d_flow_audit.json # Flows on the 66D/114D/408D model landscapes (k-hat notes inside)
+│   ├── chignolin_1us_metrics.npz    # 100,000-frame RMSD and Rg (1 us chignolin run)
+│   ├── chignolin_overnight_metrics.npz # 30,000-frame RMSD and Rg (earlier 300 ns chignolin run)
+│   ├── trpcage_overnight_metrics.npz   # 30,000-frame RMSD and Rg (300 ns Trp-cage run)
+│   ├── chignolin_ca_conformations.json # C-alpha coordinates for the figure insets
+│   ├── lj38_inversion_results.json     # LJ38 Langevin sweep
+│   ├── *.pdb, *.xyz            # Reference structures (1UAO, alanine, LJ38 minima)
+│   └── chignolin_1us_audit.json # LEGACY, not used by the paper: its ESS values are random placeholders
 ├── scripts/                    # Reproduction & audit scripts
-│   ├── plotting.py             # Typewriter Lab visual style theme
-│   ├── make_figures.py         # Master script generating all figures, tables & macros
-│   └── eval_alanine_flow.py    # Standalone RealNVP Boltzmann generator audit
+│   ├── plotting.py             # Figure style
+│   ├── make_figures.py         # Generates all figures, tables & text macros from data/
+│   ├── eval_alanine_flow.py    # 2D alanine-surrogate RealNVP flow audit (CPU)
+│   ├── eval_3d_molecular_flows.py      # Flows on the higher-dimensional model landscapes (GPU)
+│   └── eval_3d_equivariant_and_khat.py # SE(3) flow and Pareto k-hat (GPU)
 ├── requirements.txt            # Minimal Python dependencies
 ├── pyproject.toml              # Project specification
 └── LICENSE                     # Apache 2.0 License
@@ -84,14 +91,14 @@ pip install -r requirements.txt
 ```
 
 ### 2. Regenerate All Manuscript Figures & Numbers
-To regenerate all 6 figures, the audit table, and `paper/generated/values.tex` directly from stored data:
+To regenerate all 7 figures, both tables, and `paper/generated/values.tex` directly from stored data:
 ```bash
 python scripts/make_figures.py
 ```
 Outputs are saved directly to `paper/figures/` and `paper/generated/values.tex`.
 
 ### 3. Run the Alanine Dipeptide RealNVP Flow Audit
-To train the RealNVP Boltzmann generator via reverse-KL on the 2D Ramachandran landscape and audit its failure:
+To train the RealNVP flow via reverse KL on the analytic 2D Ramachandran surrogate and audit its failure:
 ```bash
 python scripts/eval_alanine_flow.py
 ```

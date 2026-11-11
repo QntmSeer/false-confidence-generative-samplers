@@ -1,26 +1,19 @@
-\begin{table*}[t]
-\centering
-\caption{Diagnostic blindness of self-normalized importance sampling metrics across continuous 3D molecular flows ($R=200$ runs). Every unvisited funnel exhibits high ESS, light-tailed Pareto $\hat{k} < 0.5$, and small forward Jensen gap $G_{\rm fwd}$, yet suffers 0\% (or near-zero) confidence interval coverage with massive true free-energy bias $|\Delta F|$. The reverse check $G_{\rm rev}$ quantitatively unmasks every omission across all 3D architectures, including exact $SE(3)$-equivariant models.}
-\label{tab:3d_flows}
-\small
-\resizebox{\textwidth}{!}{\begin{tabular}{llrcccccc}
+\begin{tabular}{llllrrrr}
 \toprule
-System & Model Architecture & Params & Support & ESS (\%) & Pareto $\hat{k}$ & Cov. (\%) & $|\Delta F|$ & $G_{\rm rev}$ (nats) \\
+Landscape & Proposal & Params per flow & Support & ESS (\%) & Cov. (\%) & $|\hat F-F|$ & $G_{\rm rev}$ (nats) \\
 \midrule
-Alanine 2D & RealNVP (Ramachandran) & 199k & $C_{7\rm eq}$ only & $81\%$ & --- & $15\%$ & $0.06$ kcal/mol & $1.7$ \\
- & Bi-modal Twin Control & 199k & Full landscape & $81\%$ & --- & $95\%$ & $0.01$ kcal/mol & $0.00$ \\
+Alanine 2D surrogate & RealNVP, reverse KL & 4 layers & C7eq only & 79 & 10.0 & 0.12 kcal/mol & 11.66 \\
 \midrule
-Alanine 3D & Coupled NeRF Flow (60D) & 1,549,248 & $C_{7\rm eq}$ only & 91.4\% & $0.00$ & 2.5\% & 0.153 kcal/mol & 7.6 \\
- ($D=66$) & Paired Twin Control & 1,549,248 & Bi-basin & 86.1\% & $0.00$ & 1.5\% & 0.094 kcal/mol & 10.33 \\
+Alanine 3D surrogate & NeRF RealNVP & 1,549,248 & C7eq only & 91 & 2.5 & 0.15 kcal/mol & 7.65 \\
+ & two-flow mixture & 1,549,248 & both basins & 86 & 1.5 & 0.094 kcal/mol & 10.33 \\
 \midrule
-$\text{LJ}_{38}$ 3D & Eckart RealNVP (108D) & 1,943,448 & $C_{5v}$ trapped & 45.4\% & $-0.90$ & 0\% & 0.6487 $\epsilon$ & 58724 \\
- ($D=114$) & Paired Bi-Funnel Twin & 1,943,448 & Bi-funnel & 24.2\% & $-0.93$ & 97\% & 0.0002 $\epsilon$ & 1.05 \\
+LJ$_{38}$ two-basin & Eckart RealNVP & 1,943,448 & ico only & 45 & 0.0 & 0.65 $\epsilon$ & 58{,}724 \\
+ & two-flow mixture & 1,943,448 & both basins & 24 & 97.0 & 0.0002 $\epsilon$ & 1.05 \\
 \midrule
-$\text{LJ}_{38}$ 3D & $SE(3)$-Equiv. Distance Flow & 2,643,864 & $C_{5v}$ trapped & 44.6\% & $-0.92$ & 0\% & 0.6487 $\epsilon$ & 65059 \\
- ($D=114$) & Paired $SE(3)$ Bi-Funnel Twin & 2,643,864 & Bi-funnel & 23.5\% & $-0.94$ & 97\% & 0.0002 $\epsilon$ & 1.04 \\
+LJ$_{38}$ two-basin & SE(3) distance flow & 2,643,864 & ico only & 45 & 0.0 & 0.65 $\epsilon$ & 65{,}059 \\
+ & two-flow mixture & 2,643,864 & both basins & 23 & 97.0 & 0.0002 $\epsilon$ & 1.04 \\
 \midrule
-Chignolin 3D & Eckart RealNVP (408D) & 10,902,704 & Misfold trapped & 83.3\% & $-0.72$ & 0\% & 0.680 kcal/mol & 32434 \\
- ($D=414$) & Paired Bi-Basin Twin & 10,902,704 & Bi-basin & 83.2\% & $-0.71$ & 95\% & 0.0031 kcal/mol & 0.10 \\
+Two-Gaussian 408D & Eckart RealNVP & 10,902,704 & basin B only & 83 & 0.0 & 0.68 kcal/mol & 32{,}434 \\
+ & two-flow mixture & 10,902,704 & both basins & 83 & 95.0 & 0.0031 kcal/mol & 0.096 \\
 \bottomrule
-\end{tabular}}
-\end{table*}
+\end{tabular}

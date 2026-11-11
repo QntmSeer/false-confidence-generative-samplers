@@ -19,9 +19,13 @@ paper/*.log
 paper/*.out
 paper/*.synctex.gz
 
-# Private drafts & non-preprint documents
+# Private drafts, release bundles & non-preprint documents
 treatise/
 paper/main_anonymous.*
+paper/false-confidence-v3*
+paper/CHANGES_v3.md
+paper/CHEMRXIV_V3_SUBMISSION_KIT.md
+paper/changed-files.txt
 
 # Scratch
 scratch/
